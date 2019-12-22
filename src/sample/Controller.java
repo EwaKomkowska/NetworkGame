@@ -26,29 +26,33 @@ public class Controller {
     @FXML
     private void initialize() {
         firstButton.setText(Main.button1);
-        secondButton.setText("Button 2");
-        thirdButton.setText("Button 3");
-        fourthButton.setText("Button 4");
+        secondButton.setText(Main.button2);
+        thirdButton.setText(Main.button3);
+        fourthButton.setText(Main.button4);
         text1.setText("This is field to show a story");
     }
 
     @FXML
     private void chooseFirst() throws IOException {
         System.out.println("Zagłosowałam na opcje 1");
+        Main.mainStage.close();
     }
 
     @FXML
     private void chooseSecond() throws IOException {
         System.out.println("Zagłosowałam na opcje 2");
+        Main.mainStage.close();
     }
 
     @FXML
     private void chooseThird() throws IOException {
         System.out.println("Zagłosowałam na opcje 3");
+        Main.mainStage.close();
     }
 
     @FXML
     private void chooseFourth() throws IOException {
         System.out.println("Zagłosowałam na opcje 4");
+        Main.mainStage.close();
     }
 }
