@@ -5,6 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+
+import static sample.Main.sock;
 
 public class StartWindow {
 
@@ -23,6 +29,15 @@ public class StartWindow {
 
     @FXML
     private void joinToPlay() throws IOException {
+        Main.setGra(true);
         Main.setRoot("sample");
+
+        /*Selector sel = Selector.open();
+
+        sock = SocketChannel.open(new InetSocketAddress(Main.host, Main.port));  //np. host: "localhost", port: 1234
+        sock.configureBlocking(false);              // Używanie Selectora wymaga nieblokującego I/O
+        SelectionKey sockKey = sock.register(sel, SelectionKey.OP_READ); // Tak każe się czekać na zdarzenie*/
+
+        System.out.println("Gniazdo uruchomione!");
     }
 }
