@@ -32,7 +32,7 @@ public class Controller {
     private void initialize() throws IOException {
 
 /*      tutaj trzeba odczytac dane z serwera i jakos kluczami podzielić na pytanie (historyjke) i poszczegolne opcje???
-        Do tego trzeba pamietac, ze po wybraniu opcji moze byc konieczne dopisanie dalszej hsitoryjki?
+        Do tego trzeba pamietac, ze po wybraniu opcji moze byc konieczne dopisanie dalszej historyjki?
 
         sel.select();                               // oczekiwanie na zdarzenie
 
@@ -53,6 +53,29 @@ public class Controller {
 
         sel.selectedKeys().clear();                 // klucze są w zbiorze do momentu usunięcia*/
 
+    /*tu jest druga wersja z buforami i kanałem
+        ByteBuffer question = ByteBuffer.allocate(128);
+        ByteBuffer option1   = ByteBuffer.allocate(128);
+        ByteBuffer option2   = ByteBuffer.allocate(128);
+        ByteBuffer option3   = ByteBuffer.allocate(128);
+        ByteBuffer option4   = ByteBuffer.allocate(128);
+
+
+        ByteBuffer[] bufferArray = { question, option1, option2, option3, option4 };
+
+        int bytesRead = sock.read(bufferArray);
+        if (byteRead == -1) System.out.println("The connection is closed");
+
+        //a tu jeszcze inna wersja ze sprawdzaniem obecnie otwartych gniazd: http://tutorials.jenkov.com/java-nio/selectors.html
+
+        //String zmienna = "Przyklad danych";
+        //po zaalokowaniu pamieci i wyczyszczeniu bufora
+        //zapisanie danych do bufora: buf.put(zmienna.getBytes());
+        //na koniec buf.flip();
+     */
+
+    /*potwierdzenie odbioru zrobione na zasadzie wyslania inormacji i opcji???*/
+
         firstButton.setText(Main.getButton1());
         secondButton.setText(Main.getButton2());
         thirdButton.setText(Main.getButton3());
@@ -63,24 +86,60 @@ public class Controller {
     @FXML
     private void chooseFirst() throws IOException {
         System.out.println("Zagłosowałam na opcje 1");
-        Main.getMainStage().close();
+
+        firstButton.setDisable(true);
+        secondButton.setDisable(true);
+        thirdButton.setDisable(true);
+        fourthButton.setDisable(true);
+
+        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseSecond() throws IOException {
         System.out.println("Zagłosowałam na opcje 2");
-        Main.getMainStage().close();
+        firstButton.setDisable(true);
+        secondButton.setDisable(true);
+        thirdButton.setDisable(true);
+        fourthButton.setDisable(true);
+        /*String myAnswer = "2";
+
+        ByteBuffer buf = ByteBuffer.allocate(8);
+        buf.clear();
+        buf.put(myAnswer.getBytes());
+
+        buf.flip();
+
+        while(buf.hasRemaining()) {
+            sock.write(buf);
+        }*/
+
+
+        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseThird() throws IOException {
         System.out.println("Zagłosowałam na opcje 3");
-        Main.getMainStage().close();
+
+        firstButton.setDisable(true);
+        secondButton.setDisable(true);
+        thirdButton.setDisable(true);
+        fourthButton.setDisable(true);
+
+        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseFourth() throws IOException {
         System.out.println("Zagłosowałam na opcje 4");
+
+        firstButton.setDisable(true);
+        secondButton.setDisable(true);
+        thirdButton.setDisable(true);
+        fourthButton.setDisable(true);
+
+        System.out.println("Wysyłam komunikat o zaglosowaniu");
         Main.getMainStage().close();
     }
 }

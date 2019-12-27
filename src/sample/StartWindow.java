@@ -34,9 +34,11 @@ public class StartWindow {
 
         /*Selector sel = Selector.open();
 
-        sock = SocketChannel.open(new InetSocketAddress(Main.host, Main.port));  //np. host: "localhost", port: 1234
-        sock.configureBlocking(false);              // Używanie Selectora wymaga nieblokującego I/O
-        SelectionKey sockKey = sock.register(sel, SelectionKey.OP_READ); // Tak każe się czekać na zdarzenie*/
+        sock = SocketChannel.open();
+        sock.configureBlocking(false);
+        sock.connect(new InetSocketAddress(Main.host, Main.port));      //np. host: "localhost", port: 1234
+        SelectionKey sockKey = sock.register(sel, SelectionKey.OP_READ); // rejestracja kanału w selektorze
+                    //OP_READ ustawia do odczytu - można też   SelectionKey.OP_READ | SelectionKey.OP_WRITE                */
 
         System.out.println("Gniazdo uruchomione!");
     }
