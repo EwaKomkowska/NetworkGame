@@ -1,4 +1,4 @@
-package sample;
+package Controllers;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,10 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+/*import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.SocketChannel;*/
 
 public class Main extends Application {
 
@@ -22,12 +22,13 @@ public class Main extends Application {
     private static Stage mainStage;
     private static boolean gra;
 
-    static SocketChannel sock;
     static Integer port;
     static String host;
+
+    /*static SocketChannel sock;
     static Selector sel;                           // selektor – opakowuje mechanizm typu 'select'
     static SelectionKey sockKey;
-    static ByteBuffer bb = ByteBuffer.allocate(10); // bufor – odpowiednio opakowana tablica bajtów
+    static ByteBuffer bb = ByteBuffer.allocate(10); // bufor – odpowiednio opakowana tablica bajtów*/
 
 
     public static boolean getGra() {
@@ -93,7 +94,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException{
-        scene = new Scene(loadFXML("start"), 500, 400);
+        scene = new Scene(loadFXML("/resources/start"), 500, 400);
         stage.setScene(scene);
         stage.setTitle("Client choice");
         stage.show();
@@ -105,14 +106,14 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws IOException {
-        Main.setButton1("Option 1");
+        Main.setButton1("Option 1");            //to jest tylko zmienna przechowujaca tekst, a nie przycisk
         Main.setButton2("Option 2");
         Main.setButton3("Option 3");
         Main.setButton4("Option 4");
 
         //coś na zasadzie dopóki nie dołączy do gry to nie idź dalej!!!
         //while (!getGra()) {
-            System.out.println("Czekam na start gry!");
+            System.out.println("Czekam na start gry!");     //TODO: Dane z args
             Main.host = "localhost";        //args[0];
             Main.port = 1234;                    //Integer.parseInt(args[1]);
             launch(args);

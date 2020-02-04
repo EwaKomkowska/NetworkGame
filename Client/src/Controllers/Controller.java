@@ -1,17 +1,20 @@
-package sample;
+package Controllers;
 
+import Tasks.ReadTask;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-
-import static sample.Main.sel;
-import static sample.Main.sockKey;
-import static sample.Main.sock;
-import static sample.Main.bb;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class Controller {
+
+    private InputStream in;
+    private OutputStream out;
 
     @FXML
     private Button firstButton;
@@ -140,6 +143,60 @@ public class Controller {
         fourthButton.setDisable(true);
 
         System.out.println("Wysyłam komunikat o zaglosowaniu");
+        //Main.getMainStage().close();
+    }
+
+
+    private void receiveMessage(String[] responseParts) {
+        //messageObservableList.add(new Message(responseParts[3], responseParts[1], responseParts[4], responseParts[2]));
+        //TODO: dodac otrzymana wiadomosc do tekstu
+        text1.setText(responseParts[0]);
+        firstButton.setText(responseParts[1]);
+        secondButton.setText(responseParts[2]);
+        thirdButton.setText(responseParts[3]);
+        fourthButton.setText(responseParts[4]);
+        // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
+        listenResponses();
+    }
+
+    private void listenResponses() {
+        ReadTask readTask = new ReadTask(in);
+        new Thread(readTask).start();
+        readTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+                String response = readTask.getValue();
+                if (response != null) {
+                    //TODO: jaki znacznik rozdziela wiadomosci?
+                    String[] responseParts = response.split("//divider@//");
+
+                    // w zależności od typu odpowiedzi podejmujemy różne akcje
+                    if (responseParts[0].equals("FOUND") || responseParts[0].equals("NOTFOUND")) {
+                    /*
+                        responseParts[0] --> nagłówek 'FOUND' lub 'NOTFOUND'
+                        responseParts[1] --> nazwa tematu
+                        responseParts[2] --> opis tematu
+                    */
+                        //TODO: tu byla inna funkcja, czy my takiej potrzebujemy
+                        //searchAction(responseParts);
+                    } else if (responseParts[0].equals("MESSAGE")) {
+                    /*
+                        responseParts[0] --> nagłówek 'MESSAGE'
+                        responseParts[1] --> tytuł wiadomości
+                        responseParts[2] --> treść wiadomości
+                        responseParts[3] --> nazwa tematu
+                        responseParts[4] --> autor
+                    */
+                        receiveMessage(responseParts);
+                    }
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void exit () {
+        //TODO: zamknac gniazdo, zwolnic pamiec
         Main.getMainStage().close();
     }
 }
