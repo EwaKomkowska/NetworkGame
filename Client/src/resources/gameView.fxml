@@ -4,17 +4,17 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller" style="-fx-background-color: #90EE90">
+<AnchorPane prefHeight="1000.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller" style="-fx-background-color: #90EE90">
     <children>
         <Text fx:id="text1" layoutX="150.0" layoutY="100.0" textAlignment="CENTER"/>
-        <Pane layoutX="14.0" layoutY="68.0" prefHeight="161.0" prefWidth="330.0" style="-fx-font-weight: bold">
+        <Pane layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="550.0" style="-fx-font-weight: bold">
             <children>
-                <Button fx:id="firstButton" onAction="#chooseFirst" style="-fx-background-color: #1E90FF" layoutX="100.0" layoutY="100.0" />
-                <Button fx:id="secondButton" onAction="#chooseSecond" style="-fx-background-color: #1E90FF" layoutX="250.0" layoutY="100.0"/>
-                <Button fx:id="thirdButton" onAction="#chooseThird" style="-fx-background-color: #1E90FF" layoutY="150.0" layoutX="100.0"/>
-                <Button fx:id="fourthButton" onAction="#chooseFourth" style="-fx-background-color: #1E90FF" layoutY="150.0" layoutX="250.0"/>
+                <Button fx:id="firstButton" onAction="#chooseFirst" style="-fx-background-color: #1E90FF" layoutX="100.0" layoutY="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="secondButton" onAction="#chooseSecond" style="-fx-background-color: #1E90FF" layoutX="250.0" layoutY="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="thirdButton" onAction="#chooseThird" style="-fx-background-color: #1E90FF" layoutY="250.0" layoutX="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="fourthButton" onAction="#chooseFourth" style="-fx-background-color: #1E90FF" layoutY="250.0" layoutX="250.0" prefWidth="100" prefHeight="100" wrapText="true"/>
             </children>
         </Pane>
-        <Button fx:id="exitButton" onAction="#exit" style="-fx-background-color: #1E90FF" layoutX="375.0" layoutY="350.0" prefWidth="90.0" text="Exit"/>
+        <Button fx:id="exitButton" onAction="#exit" style="-fx-background-color: #1E90FF" layoutX="400.0" layoutY="350.0" prefWidth="90.0" text="Exit"/>
     </children>
 </AnchorPane>

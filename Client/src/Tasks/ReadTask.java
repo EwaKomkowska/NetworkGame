@@ -3,7 +3,6 @@ package Tasks;
 import javafx.concurrent.Task;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 public class ReadTask extends Task<String> {
 
@@ -19,19 +18,22 @@ public class ReadTask extends Task<String> {
         //TODO: obsluga przyjmowania tekstu
 
         int currentCount = 0;
-        byte[] buffer = new byte[128];      //TODO: czy odczytujemy długość?
+        byte[] buffer = new byte[1000];      //TODO: czy odczytujemy długość?
         StringBuilder textMessage = new StringBuilder();
+        String finalMessage;
+        int ind = -1;
 
-        while((currentCount = in.read(buffer, 0, 128)) > 0) {
-            //totalCount = totalCount + currentCount;
-            textMessage.append(new String(buffer, 0, currentCount, StandardCharsets.US_ASCII));
-            //if(totalCount == length) break;
+        while((currentCount = in.read(buffer, 0, 1000)) > 0) {
+
+            textMessage.append(new String(buffer, 0, currentCount));     //, StandardCharsets.US_ASCII)
+            System.out.println(textMessage);
         }
-        if(currentCount < 0) {
+
+        if (textMessage.length() == 0) {
+            //TODO: czy jesli serwer aktywny, ale nic nie wysyła, to akceptować gre?
             System.out.println("Błąd podczas odczytu wiadomości od serwera.");
             return null;
         }
-
 
         return new String(textMessage);
     }

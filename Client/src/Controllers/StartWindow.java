@@ -1,8 +1,6 @@
 package Controllers;
 
-import Tasks.ReadTask;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
+import Tasks.ConnectTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -37,38 +35,42 @@ public class StartWindow {
     public Socket getSocket() { return socket; }
 
 
+    public Button getStartButton() {
+        return startButton;
+    }
+
+    public Text getWelcomeText() {
+        return welcomeText;
+    }
+
+    public void setStartButton(Button startButton) {
+        this.startButton = startButton;
+    }
+
+    public void setWelcomeText(Text welcomeText) {
+        this.welcomeText = welcomeText;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public void setIn(InputStream in) {
+        this.in = in;
+    }
+
+    public void setOut(OutputStream out) {
+        this.out = out;
+    }
+
     @FXML
     private void initialize() {
         startButton.setText("Play now!!!");
         startButton.setDisable(true);
         welcomeText.setText("In this time, there isn't any game. You must wait.");
 
-        try {
-            socket = new Socket("127.0.0.1", 2115);         //TODO: zmienic przyjmowane dane na Main.host, Main.port
-            in = socket.getInputStream();
-            out = socket.getOutputStream();
-
-            ReadTask message = new ReadTask(in);
-            new Thread(message).start();        //watek odczytywania zostal uruchomiony
-
-            message.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent t) {
-                            String response = message.getValue();
-                            if (response != null) {
-                                //TODO:Serwer sie uruchomil co dalej?
-                                Main.setGra(true);
-                                startButton.setDisable(false);
-                            }
-                        }
-                    });
-        } catch (IOException e) {
-            System.out.println("Problem z połączeniem z serwerem");
-            Main.setGra(false);
-        }
-
-        //po przyjściu komunikatu:
-        //Welcome to our game. If you want to play, please press the button below!
+        ConnectTask ct = new ConnectTask(this);
+        new Thread(ct).start();
     }
 
     @FXML
@@ -93,7 +95,5 @@ public class StartWindow {
         sock.connect(new InetSocketAddress(Main.host, Main.port));      //np. host: "localhost", port: 1234
         SelectionKey sockKey = sock.register(sel, SelectionKey.OP_READ); // rejestracja kanału w selektorze
                     //OP_READ ustawia do odczytu - można też   SelectionKey.OP_READ | SelectionKey.OP_WRITE                */
-
-        System.out.println("Gniazdo uruchomione!");
     }
 }

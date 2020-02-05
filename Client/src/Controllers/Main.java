@@ -22,8 +22,8 @@ public class Main extends Application {
     private static Stage mainStage;
     private static boolean gra;
 
-    static Integer port;
-    static String host;
+    public static Integer port;
+    public static String host;
 
     /*static SocketChannel sock;
     static Selector sel;                           // selektor – opakowuje mechanizm typu 'select'
