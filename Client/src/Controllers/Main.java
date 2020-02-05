@@ -7,14 +7,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-/*import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;*/
 
 public class Main extends Application {
 
     static Scene scene;
+
+    private static String text;
     private static String button1;
     private static String button2;
     private static String button3;
@@ -24,11 +22,6 @@ public class Main extends Application {
 
     public static Integer port;
     public static String host;
-
-    /*static SocketChannel sock;
-    static Selector sel;                           // selektor – opakowuje mechanizm typu 'select'
-    static SelectionKey sockKey;
-    static ByteBuffer bb = ByteBuffer.allocate(10); // bufor – odpowiednio opakowana tablica bajtów*/
 
 
     public static boolean getGra() {
@@ -87,6 +80,14 @@ public class Main extends Application {
         Main.mainStage = mainStage;
     }
 
+    public static String getText() {
+        return text;
+    }
+
+    public static void setText(String text) {
+        Main.text = text;
+    }
+
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
@@ -106,6 +107,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws IOException {
+        Main.setText("Pytanie");
         Main.setButton1("Option 1");            //to jest tylko zmienna przechowujaca tekst, a nie przycisk
         Main.setButton2("Option 2");
         Main.setButton3("Option 3");

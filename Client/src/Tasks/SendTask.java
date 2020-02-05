@@ -2,7 +2,9 @@ package Tasks;
 
 import javafx.concurrent.Task;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 public class SendTask extends Task<Void> {
 
@@ -15,8 +17,16 @@ public class SendTask extends Task<Void> {
     }
 
     @Override
-    protected Void call() throws Exception {
-        //TODO: tu musi byc cała obsluga wysyłanej wiadomosci
+    protected Void call() {
+        try {
+            String message = "&&" + text + "&&";    //TODO: czy to wystarczy do wysłania odpowierdzi?
+            // czy ma być jeszcze coś odnośnie końca, czy można podać koniec tylko?
+            out.write(message.getBytes(StandardCharsets.UTF_8));
+
+        } catch (IOException e) {
+            System.out.println("Error until sending a message!");
+        }
+
         return null;
     }
 }

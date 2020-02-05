@@ -1,6 +1,7 @@
 package Controllers;
 
 import Tasks.ReadTask;
+import Tasks.SendTask;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,62 +34,20 @@ public class Controller {
 
     @FXML
     private void initialize() throws IOException {
-
-/*      tutaj trzeba odczytac dane z serwera i jakos kluczami podzielić na pytanie (historyjke) i poszczegolne opcje???
-        Do tego trzeba pamietac, ze po wybraniu opcji moze byc konieczne dopisanie dalszej historyjki?
-
-        sel.select();                               // oczekiwanie na zdarzenie
-
-        // selectedKeys() zawiera listę kluczy dla których można wykonać żądaną operację
-        // i ustawia im dostępne zdarzenia (readyOps, isReadable, is…)
-        assert sel.selectedKeys().size() == 1;
-        assert sel.selectedKeys().iterator().next() == sockKey;
-
-        bb.clear();                                 // przygotowanie bufora do pracy
-        int count = sock.read(bb);
-
-        if(count == -1) {                           // -1 oznacza EOF
-            sockKey.cancel();                       // cancel usuwa klucz z selektora
-            return;
-        }
-
-        System.out.write(bb.array(), 0, bb.position());
-
-        sel.selectedKeys().clear();                 // klucze są w zbiorze do momentu usunięcia*/
-
-    /*tu jest druga wersja z buforami i kanałem
-        ByteBuffer question = ByteBuffer.allocate(128);
-        ByteBuffer option1   = ByteBuffer.allocate(128);
-        ByteBuffer option2   = ByteBuffer.allocate(128);
-        ByteBuffer option3   = ByteBuffer.allocate(128);
-        ByteBuffer option4   = ByteBuffer.allocate(128);
-
-
-        ByteBuffer[] bufferArray = { question, option1, option2, option3, option4 };
-
-        int bytesRead = sock.read(bufferArray);
-        if (byteRead == -1) System.out.println("The connection is closed");
-
-        //a tu jeszcze inna wersja ze sprawdzaniem obecnie otwartych gniazd: http://tutorials.jenkov.com/java-nio/selectors.html
-
-        //String zmienna = "Przyklad danych";
-        //po zaalokowaniu pamieci i wyczyszczeniu bufora
-        //zapisanie danych do bufora: buf.put(zmienna.getBytes());
-        //na koniec buf.flip();
-     */
-
-    /*potwierdzenie odbioru zrobione na zasadzie wyslania inormacji i opcji???*/
-
         firstButton.setText(Main.getButton1());
         secondButton.setText(Main.getButton2());
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
-        text1.setText("This is field to show a story");
+        text1.setText(Main.getText());
+        listenResponses();
     }
 
     @FXML
     private void chooseFirst() throws IOException {
         System.out.println("Zagłosowałam na opcje 1");
+
+        SendTask sendTask = new SendTask("1", out);
+        new Thread(sendTask).start();
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
@@ -101,29 +60,22 @@ public class Controller {
     @FXML
     private void chooseSecond() throws IOException {
         System.out.println("Zagłosowałam na opcje 2");
+
+        SendTask sendTask = new SendTask("2", out);
+        new Thread(sendTask).start();
+
         firstButton.setDisable(true);
         secondButton.setDisable(true);
         thirdButton.setDisable(true);
         fourthButton.setDisable(true);
-        /*String myAnswer = "2";
-
-        ByteBuffer buf = ByteBuffer.allocate(8);
-        buf.clear();
-        buf.put(myAnswer.getBytes());
-
-        buf.flip();
-
-        while(buf.hasRemaining()) {
-            sock.write(buf);
-        }*/
-
-
-        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseThird() throws IOException {
         System.out.println("Zagłosowałam na opcje 3");
+
+        SendTask sendTask = new SendTask("3", out);
+        new Thread(sendTask).start();
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
@@ -137,6 +89,9 @@ public class Controller {
     private void chooseFourth() throws IOException {
         System.out.println("Zagłosowałam na opcje 4");
 
+        SendTask sendTask = new SendTask("4", out);
+        new Thread(sendTask).start();
+
         firstButton.setDisable(true);
         secondButton.setDisable(true);
         thirdButton.setDisable(true);
@@ -148,18 +103,37 @@ public class Controller {
 
 
     private void receiveMessage(String[] responseParts) {
-        //messageObservableList.add(new Message(responseParts[3], responseParts[1], responseParts[4], responseParts[2]));
-        //TODO: dodac otrzymana wiadomosc do tekstu
-        text1.setText(responseParts[0]);
-        firstButton.setText(responseParts[1]);
-        secondButton.setText(responseParts[2]);
-        thirdButton.setText(responseParts[3]);
-        fourthButton.setText(responseParts[4]);
+        try {
+            switch (responseParts[2]) {
+                case "0":       //pytanie
+                    Main.setText(responseParts[3]);     //przekazujemy tez na main, żeby móc dodac odpowiedź
+                    text1.setText(Main.getText());
+                    break;
+                case "1":
+                    firstButton.setText(responseParts[3]);
+                    break;
+                case "2":
+                    secondButton.setText(responseParts[3]);
+                    break;
+                case "3":
+                    thirdButton.setText(responseParts[3]);
+                    break;
+                case "4":
+                    fourthButton.setText(responseParts[3]);
+                    break;
+                case "5":       //odpowiedź
+                    text1.setText(Main.getText() + responseParts[3]);
+            }
+        }catch (Exception e) {
+            System.out.println("To nie było pytanie, odpowiedzi ani wynik głosowania");
+        }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();
     }
 
-    private void listenResponses() {
+
+
+    public void listenResponses() {
         ReadTask readTask = new ReadTask(in);
         new Thread(readTask).start();
         readTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
@@ -168,25 +142,9 @@ public class Controller {
                 String response = readTask.getValue();
                 if (response != null) {
                     //TODO: jaki znacznik rozdziela wiadomosci?
-                    String[] responseParts = response.split("//divider@//");
-
-                    // w zależności od typu odpowiedzi podejmujemy różne akcje
-                    if (responseParts[0].equals("FOUND") || responseParts[0].equals("NOTFOUND")) {
-                    /*
-                        responseParts[0] --> nagłówek 'FOUND' lub 'NOTFOUND'
-                        responseParts[1] --> nazwa tematu
-                        responseParts[2] --> opis tematu
-                    */
-                        //TODO: tu byla inna funkcja, czy my takiej potrzebujemy
-                        //searchAction(responseParts);
-                    } else if (responseParts[0].equals("MESSAGE")) {
-                    /*
-                        responseParts[0] --> nagłówek 'MESSAGE'
-                        responseParts[1] --> tytuł wiadomości
-                        responseParts[2] --> treść wiadomości
-                        responseParts[3] --> nazwa tematu
-                        responseParts[4] --> autor
-                    */
+                    String[] responseParts = response.split("&&");
+                    if (responseParts[1].equals("1")) {
+                        System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc");
                         receiveMessage(responseParts);
                     }
                 }
@@ -194,9 +152,14 @@ public class Controller {
         });
     }
 
+
+
     @FXML
     private void exit () {
         //TODO: zamknac gniazdo, zwolnic pamiec
+        SendTask sendTask = new SendTask("Koniec", out);
+        new Thread(sendTask).start();
+
         Main.getMainStage().close();
     }
 }
