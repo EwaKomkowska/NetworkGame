@@ -35,7 +35,6 @@ public class ConnectTask extends Task<Void> {
                         System.out.println("response" + response);
                         while (response != null) {
                             String [] messageValue = response.split("&&");  //TODO: jaki mamy znak oddzielajacy?
-                            System.out.println("wiadomosc" + messageValue[1]);
                             switch (messageValue[1]) {
                                 case "0":
                                     //TODO:Serwer sie uruchomil co dalej?
@@ -43,12 +42,37 @@ public class ConnectTask extends Task<Void> {
                                     break;
                                 case "1":
                                     System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc");
-                                    //TODO: przekazac na wyswietlanie juz
-                                    Main.setButton1(messageValue[2]);       //skoro 0 jest indeksem to dalej przekazujemy treść
+                                    for (String i : messageValue) {
+                                        System.out.println(i);
+                                    }
+                                    try {
+                                        switch (messageValue[2]) {
+                                            case "Q":       //pytanie
+                                                Main.setText(Main.getText() + messageValue[3]);
+                                                break;
+                                            case "A":
+                                                Main.setButton1(messageValue[3]);
+                                                break;
+                                            case "B":
+                                                Main.setButton2(messageValue[3]);
+                                                break;
+                                            case "C":
+                                                Main.setButton3(messageValue[3]);
+                                                break;
+                                            case "D":
+                                                Main.setButton4(messageValue[3]);
+                                                break;
+                                            case "5":       //odpowiedź
+                                                Main.setText(Main.getText() + messageValue[3]);
+                                                break;
+                                        }
+                                    }catch (Exception e) {
+                                        System.out.println("To nie było pytanie");
+                                    }
                                     break;
-                                default:
+                                /*default:
                                     System.out.println("Nieznana wiadomosc");
-                                    break;
+                                    break;*/
                             }
 
                         response = response.substring(5, response.length());

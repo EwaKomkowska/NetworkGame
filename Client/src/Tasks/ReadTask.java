@@ -23,10 +23,10 @@ public class ReadTask extends Task<String> {
         String finalMessage;
         int ind = -1;
 
-        while((currentCount = in.read(buffer, 0, 1000)) > 0) {
+        while((currentCount = in.read(buffer, 0, 100)) > 0) {
 
             textMessage.append(new String(buffer, 0, currentCount));     //, StandardCharsets.US_ASCII)
-            System.out.println(textMessage);
+            System.out.println(currentCount);
         }
 
         if (textMessage.length() == 0) {

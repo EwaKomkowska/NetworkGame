@@ -107,11 +107,11 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws IOException {
-        Main.setText("Pytanie");
-        Main.setButton1("Option 1");            //to jest tylko zmienna przechowujaca tekst, a nie przycisk
-        Main.setButton2("Option 2");
-        Main.setButton3("Option 3");
-        Main.setButton4("Option 4");
+        Main.setText("");
+        Main.setButton1("");            //to jest tylko zmienna przechowujaca tekst, a nie przycisk
+        Main.setButton2("");
+        Main.setButton3("");
+        Main.setButton4("");
 
         //coś na zasadzie dopóki nie dołączy do gry to nie idź dalej!!!
         //while (!getGra()) {

@@ -2,11 +2,15 @@ package Controllers;
 
 import Tasks.ReadTask;
 import Tasks.SendTask;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +33,11 @@ public class Controller {
     @FXML
     private Button fourthButton;
 
-    @FXML
-    private Text text1;
+   @FXML
+   private AnchorPane anchorPane;
+
+   public static ObservableList <String> data;
+
 
     @FXML
     private void initialize() throws IOException {
@@ -38,7 +45,32 @@ public class Controller {
         secondButton.setText(Main.getButton2());
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
-        text1.setText(Main.getText());
+
+        ListView <String> list = new ListView<>();
+        list.setPrefHeight(75);
+        list.setPrefWidth(300);
+        list.setLayoutX(100);
+        list.setLayoutY(10);
+
+
+        ScrollPane scrollPane = new ScrollPane();
+        //scrollPane.prefWidthProperty().bind(list.widthProperty());
+        //scrollPane.prefHeightProperty().bind(list.heightProperty());
+
+        scrollPane.setLayoutX(90);
+        scrollPane.setLayoutY(10);
+
+        ObservableList <String> data = FXCollections.observableArrayList();
+        data.addAll(Main.getText());
+        System.out.println("Data: " + data);
+        list.setItems(data);
+
+
+        scrollPane.setContent(list);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        anchorPane.getChildren().add(scrollPane);
+
         listenResponses();
     }
 
@@ -105,27 +137,27 @@ public class Controller {
     private void receiveMessage(String[] responseParts) {
         try {
             switch (responseParts[2]) {
-                case "0":       //pytanie
+                case "Q":       //pytanie
                     Main.setText(responseParts[3]);     //przekazujemy tez na main, żeby móc dodac odpowiedź
-                    text1.setText(Main.getText());
+                    data.add(Main.getText());
                     break;
-                case "1":
+                case "A":
                     firstButton.setText(responseParts[3]);
                     break;
-                case "2":
+                case "B":
                     secondButton.setText(responseParts[3]);
                     break;
-                case "3":
+                case "C":
                     thirdButton.setText(responseParts[3]);
                     break;
-                case "4":
+                case "D":
                     fourthButton.setText(responseParts[3]);
                     break;
                 case "5":       //odpowiedź
-                    text1.setText(Main.getText() + responseParts[3]);
+                    data.add(responseParts[3]);
             }
         }catch (Exception e) {
-            System.out.println("To nie było pytanie, odpowiedzi ani wynik głosowania");
+            System.out.println("To nie było pytanie, odpowiedź ani wynik głosowania");
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();
@@ -145,6 +177,9 @@ public class Controller {
                     String[] responseParts = response.split("&&");
                     if (responseParts[1].equals("1")) {
                         System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc");
+                        for (String i : responseParts) {
+                            System.out.println(i);
+                        }
                         receiveMessage(responseParts);
                     }
                 }
