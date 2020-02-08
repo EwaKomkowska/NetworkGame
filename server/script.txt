@@ -61,4 +61,145 @@ Policeman: EVERY time.
 2.d.
 Policeman: Hmmm, but you don't talk too much, do ya? 
 
+3.Q.
+Police Radio: We've got what looks like a 10-91E near Peachtree Exit of 285. All cars asked to keep on the lookout for a 91V in the area.
+Lee looks at the rearview mirror.
+Policeman: I followed your case a little bit, you being a Macon boy and all. 
+
+3.A.
+You're from Macon then.
+
+3.B.
+So you've got an opinion.
+
+3.C.
+What'd you think?
+
+3.D.
+...
+
+3.a.
+Lee: You're from Macon then.
+Policeman: Yep. Came up to Atlanta to be a city cop in the seventies. Always wanted to work a murder case, like that senatorial mess you got yourself mixed up in, with all due respect. A real shame, that is.
+Lee looks out the window as another police car speeds past in the opposite direction with its sirens on.
+Policeman: Hell, the whole family used to be regulars at your folks' drugstore right in downtown. Still there?
+Lee: Sure is.
+Policeman: Good.
+
+3.b.
+Lee: You've got an opinion then?
+Policeman: Wouldn't say that. I go in for that innocent 'til proven guilty thing.
+Lee looks out the window as another police car speeds past in the opposite direction with its sirens on.
+Policeman: Even considering who they say you killed.
+
+3.c.
+Lee: What do you think?
+Policeman: (shrugs) I'm just glad I chose law and not order. A big, messy trial like that.
+Lee looks out the window as another police car speeds past in the opposite direction with its sirens on.
+Policeman: Even if you was innocent, a lot of what happened can't ever be undone.
+
+3.d.
+Policeman: (shrugs) It's not every day a fella from Bibb County goes off and kills a state senator, that's for sure.
+Lee looks out the window as another police car speeds past in the opposite direction with its sirens on.
+
+4.Q.
+Police Radio: Be advised of medical personnel on route to Hartsfield, various 10's and 20's coming in.
+Lee looks at radio.
+Lee: Any of that seem important to you?
+Policeman: All of it, but that box never shuts up. Sit in this seat and pay too much attention and you'll drive yourself crazy.
+
+Policeman: I got a nephew up at UGA, you teach there long?
+Lee: Going on my sixth year.
+Policeman: You meet your wife in Athens?
+Lee looks distressed and turns his face away, looking out the window.
+Policeman: You wanna know how I see it?
+Several more police cars pass by with their sirens on, along with a SWAT truck, all of them driving in the opposite direction.
+
+4.A.
+Sure
+
+4.B.
+Not really.
+
+4.C.
+I got much choice?
+
+4.D.
+...
+
+4.a.
+Lee: Sure.
+
+4.b.
+Lee: Not really.
+He picked up on that.
+Policeman: Well too bad, it's my car. You might have the right to remain silent, but it don't mean I gotta be.
+
+4.c.
+Lee: I got much choice?
+He picked up on that.
+Policeman: Sure don't.
+
+4.d.
+Lee says nothing.
+
+Q.5.
+The policeman opens his mouth, about to speak, but notices Lee glaring at him and stays silent for a few moments.
+Policeman: Regardless, could be you just married the wrong woman.
+
+5.A.
+Could be I did.
+
+5.B.
+Or she married the wrong guy.
+
+5.C.
+Fuck you.
+
+5.D.
+...
+
+Lee opens his mouth to speak, but decides not to, grunting dismissively.
+
+Q.6.
+Police Radio: Riot in progress. All officers available for incoming 217's. Rolling calls and dispatches to all locations.
+A helicopter, two SWAT trucks, and several police cars pass by.
+Policeman: I'm driving this man once, h--he was the worst one. He wouldn't stop going on about how he didn't do it. He was an older fella. Big, soft eyes behind a pair of smart folk glasses, and he's just wailing back there, says it wasn't him. Crying and snotting all over, right where you're sitting.
+Police Radio: All officers are available for incoming 21--
+The policeman turns off the radio.
+Policeman: Then before long he starts kicking the back of the seat, li--like a fussy baby on an airplane. And I tell him he's gotta stop, that's government property, and I'll be forced to zap him otherwise. So he stops, and having exhausted all his options, he starts crying out for his Mama. "Mama, it's all a big mistake! It wasn't me!"
+
+6.A.
+Man.
+
+6.B.
+Maybe he was innocent.
+
+6.C.
+So, did he do it?
+
+6.D.
+...
+
+6.a.
+Lee: Man.
+Policeman: Man?! Not even close!
+
+6.b.
+Lee: Maybe he was innocent.
+Policeman: Innocent?
+
+6.c.
+Lee: So did he do it?
+
+6.d.
+Policeman: Well, blabbermouth, let me tell you something.
+
+Q.7.
+Policeman: They caught the fucker red-handed! Stabbin' his wife, cutting her up as the boys came through the door! He sits in my car screaming bloody murder that it wasn't him! I think he actually believed it himself. It goes to show, people will up and go mad when they believe their life is over. Oh, I got another good one for ya. This one's a little bit less depressing and a bit more hilarious if I do say so.
+The policeman turns as he is talking, looking away from the road as someone wanders right in front of the car.
+Lee: Watch out!
+Policeman: This other time--
+The car crashes into the person on the road, veering out of control, through the guard rail, and off the edge of the cliff. Half-conscious, the man sees someone moving outside the car and hears screams and growls before passing out.
+
 Koniec
