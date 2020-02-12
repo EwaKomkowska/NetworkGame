@@ -1,3 +1,6 @@
+#ifndef handler
+#define handler
+
 #include <cstdint>
 #include <netinet/in.h>
 
@@ -10,3 +13,4 @@ public:
 
     virtual void handleEvent (uint32_t events) = 0;
 };
+#endif

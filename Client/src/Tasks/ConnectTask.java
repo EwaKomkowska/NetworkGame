@@ -35,6 +35,7 @@ public class ConnectTask extends Task<Void> {
                         System.out.println("response" + response);
                         while (response != null) {
                             String [] messageValue = response.split("&&");  //TODO: jaki mamy znak oddzielajacy?
+
                             switch (messageValue[1]) {
                                 case "0":
                                     //TODO:Serwer sie uruchomil co dalej?
@@ -48,6 +49,7 @@ public class ConnectTask extends Task<Void> {
                                     try {
                                         switch (messageValue[2]) {
                                             case "Q":       //pytanie
+                                            case "5":       //odpowiedz
                                                 Main.setText(Main.getText() + messageValue[3]);
                                                 break;
                                             case "A":
@@ -61,9 +63,6 @@ public class ConnectTask extends Task<Void> {
                                                 break;
                                             case "D":
                                                 Main.setButton4(messageValue[3]);
-                                                break;
-                                            case "5":       //odpowiedź
-                                                Main.setText(Main.getText() + messageValue[3]);
                                                 break;
                                         }
                                     }catch (Exception e) {
@@ -85,7 +84,6 @@ public class ConnectTask extends Task<Void> {
                 Main.setGra(true);      //TODO: czy na pewno randomowa wiadomosc uruchamia gre czy tylko pytanie/odpowiedz lub komunikat
                 st.getStartButton().setDisable(false);
                 st.getWelcomeText().setText("Welcome to our game. If you want to play, please press the button below!");
-
             } catch (IOException e) {
                 System.out.println("Czekam na połączenie z serwerem");
             }

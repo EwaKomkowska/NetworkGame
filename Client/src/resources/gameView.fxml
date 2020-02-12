@@ -2,16 +2,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="3000.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller" style="-fx-background-color: #90EE90">
+<?import javafx.scene.text.Text?>
+<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller" style="-fx-background-color: #90EE90">
     <children>
         <Pane layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="550.0" style="-fx-font-weight: bold">
             <children>
-                <Button fx:id="firstButton" onAction="#chooseFirst" style="-fx-background-color: #1E90FF" layoutX="100.0" layoutY="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
-                <Button fx:id="secondButton" onAction="#chooseSecond" style="-fx-background-color: #1E90FF" layoutX="250.0" layoutY="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
-                <Button fx:id="thirdButton" onAction="#chooseThird" style="-fx-background-color: #1E90FF" layoutY="250.0" layoutX="100.0" prefWidth="100" prefHeight="100" wrapText="true"/>
-                <Button fx:id="fourthButton" onAction="#chooseFourth" style="-fx-background-color: #1E90FF" layoutY="250.0" layoutX="250.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <TextArea fx:id="wynikA" layoutX="50" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikA"/>
+                <TextArea fx:id="wynikB" layoutX="425" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikB"/>
+                <TextArea fx:id="wynikC" layoutX="50" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikC"/>
+                <TextArea fx:id="wynikD" layoutX="425" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikD"/>
+                <Button fx:id="firstButton" onAction="#chooseFirst" style="-fx-background-color: #1E90FF" layoutX="150.0" layoutY="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="secondButton" onAction="#chooseSecond" style="-fx-background-color: #1E90FF" layoutX="300.0" layoutY="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="thirdButton" onAction="#chooseThird" style="-fx-background-color: #1E90FF" layoutY="300.0" layoutX="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>
+                <Button fx:id="fourthButton" onAction="#chooseFourth" style="-fx-background-color: #1E90FF" layoutY="300.0" layoutX="300.0" prefWidth="100" prefHeight="100" wrapText="true"/>
             </children>
         </Pane>
-        <Button fx:id="exitButton" onAction="#exit" style="-fx-background-color: #1E90FF" layoutX="400.0" layoutY="350.0" prefWidth="90.0" text="Exit"/>
+        <Button fx:id="exitButton" onAction="#exit" style="-fx-background-color: #1E90FF" layoutX="450.0" layoutY="450.0" prefWidth="90.0" text="Exit"/>
     </children>
 </AnchorPane>

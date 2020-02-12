@@ -7,9 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -36,21 +34,35 @@ public class Controller {
    @FXML
    private AnchorPane anchorPane;
 
+   @FXML
+   private TextArea wynikA;
+
+   @FXML
+   private TextArea wynikB;
+
+   @FXML
+   private TextArea wynikC;
+
+   @FXML
+   private TextArea wynikD;
+
    public static ObservableList <String> data;
+   private ListView <String> list;
 
 
     @FXML
     private void initialize() throws IOException {
+        in = StartWindow.getIn();
         firstButton.setText(Main.getButton1());
         secondButton.setText(Main.getButton2());
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
 
-        ListView <String> list = new ListView<>();
-        list.setPrefHeight(75);
-        list.setPrefWidth(300);
-        list.setLayoutX(100);
-        list.setLayoutY(10);
+        list= new ListView<>();
+        list.setPrefHeight(125);
+        list.setPrefWidth(400);
+        list.setLayoutX(150);
+        list.setLayoutY(60);
 
 
         ScrollPane scrollPane = new ScrollPane();
@@ -60,9 +72,8 @@ public class Controller {
         scrollPane.setLayoutX(90);
         scrollPane.setLayoutY(10);
 
-        ObservableList <String> data = FXCollections.observableArrayList();
+        data = FXCollections.observableArrayList();
         data.addAll(Main.getText());
-        System.out.println("Data: " + data);
         list.setItems(data);
 
 
@@ -134,29 +145,38 @@ public class Controller {
     }
 
 
-    private void receiveMessage(String[] responseParts) {
-        try {
-            switch (responseParts[2]) {
+    private void receiveMessage(String[] responseParts, int i) {
+        try {//TODO: jak na biezaco odswiezac tekst w buttonie
+            switch (responseParts[i+1]) {
                 case "Q":       //pytanie
-                    Main.setText(responseParts[3]);     //przekazujemy tez na main, żeby móc dodac odpowiedź
-                    data.add(Main.getText());
+                case "5":       //odpowiedz
+                    Main.setText(responseParts[i+2]);
+                    this.data.addAll(responseParts[i+2]);    //TODO: cos nie dziala z tym data - NULLPointer
+                    list.setItems(data);
                     break;
                 case "A":
-                    firstButton.setText(responseParts[3]);
+                    Main.setButton1(responseParts[i+2]);
+                    firstButton.setText(responseParts[i+2]);
+                    wynikA.setText(responseParts[i+2]);
                     break;
                 case "B":
-                    secondButton.setText(responseParts[3]);
+                    Main.setButton2(responseParts[i+2]);
+                    secondButton.setText(responseParts[i+2]);
+                    wynikB.setText(responseParts[i+2]);
                     break;
                 case "C":
-                    thirdButton.setText(responseParts[3]);
+                    Main.setButton3(responseParts[i+2]);
+                    thirdButton.setText(responseParts[i+2]);
+                    wynikC.setText(responseParts[i+2]);
                     break;
                 case "D":
-                    fourthButton.setText(responseParts[3]);
+                    Main.setButton4(responseParts[i+2]);
+                    fourthButton.setText(responseParts[i+2]);
+                    wynikD.setText(responseParts[i+2]);
                     break;
-                case "5":       //odpowiedź
-                    data.add(responseParts[3]);
             }
         }catch (Exception e) {
+            e.printStackTrace();
             System.out.println("To nie było pytanie, odpowiedź ani wynik głosowania");
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
@@ -175,14 +195,19 @@ public class Controller {
                 if (response != null) {
                     //TODO: jaki znacznik rozdziela wiadomosci?
                     String[] responseParts = response.split("&&");
-                    if (responseParts[1].equals("1")) {
-                        System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc");
-                        for (String i : responseParts) {
-                            System.out.println(i);
+
+                    for (int i = 0; i < responseParts.length; i++) {
+                        if (responseParts[i].equals("1")) {
+                            /*System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc z listen responses");
+                            for (int j = 0; j < responseParts.length; j++) {
+                                System.out.println(j + ": " + responseParts[j] + " dla i: " + i);
+                            }*/
+                            receiveMessage(responseParts, i);
+                            break;
                         }
-                        receiveMessage(responseParts);
                     }
                 }
+                else listenResponses();
             }
         });
     }

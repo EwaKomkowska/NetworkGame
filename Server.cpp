@@ -1,6 +1,17 @@
 #include <algorithm> // vector
-#inclue <unistd.h>
+#include <unistd.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <fstream>
+#include <vector>
+#include <ctime>
+#include <thread>
+
+#include "Client.h"
 #include "Server.h"
+
+using namespace std;
 
 Server::Server(long port) {
 	
@@ -12,7 +23,7 @@ Server::Server(long port) {
 	// ======CREATE=SOCKET======
 	myAddr = {};
 		myAddr.sin_family = AF_INET;
-		myAddr.sin_addr.s_addr = hton(INADDR_ANY);
+		myAddr.sin_addr.s_addr = htons(INADDR_ANY);	//TODO: czy tu nie powinno być inet_addr?
 		myAddr.sin_port = htons((uint16_t)port);
 		
 	fd = socket(PF_INET, SOCK_STREAM, 0);
@@ -29,15 +40,16 @@ Server::Server(long port) {
     }
 	
 	// ======LISTEN======
-	res = listen(server->fd, SOMAXCONN); 
+	res = listen(fd, SOMAXCONN); 		//TODO: było server->fd
     if(res){
         perror("listen failed");
-        return 1;
+        //return 1;
+	exit(0);		//TODO: czy tak moze zostac
     }
 }
 
 Server::~Server() {
-	clientsVector.clear;
+	clientsVector.clear();	//TODO: nie lepiej erase od razu?
 	close(fd);
 	delete this;
 }
@@ -51,8 +63,8 @@ void Server::handleEvent(uint32_t events) {
 		// lock Mutex
 		
 		// Dodawanie nowego uczestnika
-		Client *client = new Client(clientFd);
-		clientsVector.append(clientFd);
+		Client *clientt = new Client(clientFd);
+		clientsVector.push_back(clientFd);		//TODO: bylo append - moze byc tak?
 		
 		printf("Player in game!\n");
 
@@ -62,7 +74,7 @@ void Server::handleEvent(uint32_t events) {
 			// ======NEW=GAME======
 			gameStart = 1;
 			printf("======STARTING=NEW=GAME======\n");
-			std::thread game = std::thread(runGame, this);
+			std::thread game (&Server::runGame, this);	//TODO: czy to poprawne?
 			game.detach();
 		};
 		// else {
@@ -74,19 +86,19 @@ void Server::handleEvent(uint32_t events) {
 }
 
 void Server::deleteClient(int clientFd) {
-	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), clientsVector.end());
+	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), 		clientsVector.end());
 }
 
 void Server::sendToAll(string line) {
 	// mutex lock
 	for (int it : clientsVector) {
-		int count = write(it, &line, strlen(line));
+		int count = write(it, &line, line.length());
 		printf("message sent");
-		if(count != (int) strlen(line))
+		if(count != (int) line.length())
 			perror("write failed");
 	}
 
-};
+}
 
 
 void Server::runGame() {
@@ -96,49 +108,49 @@ void Server::runGame() {
 	string line;
 	getline(ifs, line);
 	
-	while (clientsVector.size() > 0) {
+	while (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
 		
-		int count = write(clientFd, "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
-		printf("polaczono z klientem\n");
+		int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&0&&A to jest randomowy tekst\n"))
 			perror("write failed");
 
-		count = write(clientFd, "&&1&&0&&A to jest kolejny randomowy tekst\n", strlen("&&1&&2&&A to jest kolejny randomowy tekst\n"));
-		printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest kolejny randomowy tekst\n"))
+		count = write(clientsVector[0], "&&1&&A&&A to jest kolejny randomowy tekst\n", strlen("&&1&&2&&A to jest kolejny randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&A&&A to jest kolejny randomowy tekst\n"))
 			perror("write failed");
 
-		count = write(clientFd, "&&1&&1&&A to jest 1 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
+		count = write(clientsVector[0], "&&1&&B&&A to jest 1 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&B&&A to jest 4 randomowy tekst\n"))
 			perror("write failed");
 
-		count = write(clientFd, "&&1&&2&&A to jest 2 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		printf("polaczono z klientem\n");
+		count = write(clientsVector[0], "&&1&&C&&A to jest 2 randomowy tekst\n", strlen("&&1&&C&&A to jest 4 randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
 			perror("write failed");
     
-		count = write(clientFd, "&&1&&3&&A to jest 3 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		printf("polaczono z klientem\n");
+		count = write(clientsVector[0], "&&1&&D&&A to jest 3 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
 			perror("write failed");
     
-		count = write(clientFd, "&&1&&4&&A to jest 4 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		printf("polaczono z klientem\n");
+		count = write(clientsVector[0], "&&1&&Q&&A to jest 4 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
 			perror("write failed");
 
-		count = write(clientFd, "&&1&&5&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
-		printf("polaczono z klientem\n");
+		count = write(clientsVector[0], "&&1&&5&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
+		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&2&&A to jest 5 randomowy tekst\n"))
 			perror("write failed");
+
+		printf("Wyslano wszystkie dane do klienta\n");
 		
 		sleep(10);
 	}
 	gameStart = 0;
 }
-
-
 
 
 

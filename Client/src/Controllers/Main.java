@@ -95,7 +95,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException{
-        scene = new Scene(loadFXML("/resources/start"), 500, 400);
+        scene = new Scene(loadFXML("/resources/start"), 600, 500);
         stage.setScene(scene);
         stage.setTitle("Client choice");
         stage.show();

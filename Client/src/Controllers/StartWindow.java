@@ -20,9 +20,9 @@ public class StartWindow {
     private Text welcomeText;
 
     private Socket socket;
-    private InputStream in;
+    private static InputStream in;
 
-    public InputStream getIn() {
+    public static InputStream getIn() {
         return in;
     }
 

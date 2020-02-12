@@ -1,5 +1,10 @@
+#ifndef server
+#define server
 #include <sys/epoll.h>
 #include <arpa/inet.h>
+#include <string>
+#include <vector>
+
 #include "Handler.h"
 
 class Server : public Handler {
@@ -14,7 +19,8 @@ public:
 	
 	void deleteClient(int clientFd);
 	
-	void sendToAll(char * buffor);
+	void sendToAll(std::string line);
 
 	void runGame();
-}
+};
+#endif

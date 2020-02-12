@@ -18,7 +18,7 @@
 #include "Server.h"
 #include "Handler.h"
 
-Server * server;
+Server * server1;
 
 using namespace std;
 
@@ -36,30 +36,29 @@ int main(int argc, char ** argv) {
         return 1;
     }
     
-	server = new Server(port);
+	server1 = new Server(port);
 	
 	// =======EPOLL=EVENTS=CATCH========
 	
-	server->epollFd = epoll_create1(0);
-	epoll_event event{EPOLLIN, {.ptr=server}};
-	epoll_ctl(server->epollFd, EPOLL_CTL_ADD, server->fd, &event);
+	server1->epollFd = epoll_create1(0);
+	epoll_event event{EPOLLIN, {.ptr=server1}};
+	epoll_ctl(server1->epollFd, EPOLL_CTL_ADD, server1->fd, &event);
 	
 	// =========HANDLE=EVENTS===========
 	
-	epoll_event event;
 	while(1) {
-		if (-1 == epoll_wait(epollFd, &event, 1, -1)) {
+		if (-1 == epoll_wait(server1->epollFd, &event, 1, -1)) {
 			perror("epoll_wait failed");
-			close(server->fd);
-			delete server;
+			close(server1->fd);
+			delete server1;
 			exit(0);
 		}
 		((Handler *)event.data.ptr) -> handleEvent(event.events);
 	}
 	
 	// ======CLOSE======
-	close(server->fd);
-	delete server;
+	close(server1->fd);
+	delete server1;
 	return 0;
 	
 }
