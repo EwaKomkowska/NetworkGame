@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +19,8 @@ public class Controller {
 
     private InputStream in;
     private OutputStream out;
+
+    int numerPytania = 0;
 
     @FXML
     private Button firstButton;
@@ -58,10 +61,11 @@ public class Controller {
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
 
+
         list= new ListView<>();
         list.setPrefHeight(125);
-        list.setPrefWidth(400);
-        list.setLayoutX(150);
+        list.setPrefWidth(450);
+        list.setLayoutX(100);
         list.setLayoutY(60);
 
 
@@ -89,6 +93,7 @@ public class Controller {
     private void chooseFirst() throws IOException {
         System.out.println("Zagłosowałam na opcje 1");
 
+        //TODO: dodac numer pytania
         SendTask sendTask = new SendTask("1", out);
         new Thread(sendTask).start();
 
@@ -146,38 +151,57 @@ public class Controller {
 
 
     private void receiveMessage(String[] responseParts, int i) {
-        try {//TODO: jak na biezaco odswiezac tekst w buttonie
+        try {
             switch (responseParts[i+1]) {
-                case "Q":       //pytanie
-                case "5":       //odpowiedz
+                case "Q":       //pytanie //odpowiedz
                     Main.setText(responseParts[i+2]);
-                    this.data.addAll(responseParts[i+2]);    //TODO: cos nie dziala z tym data - NULLPointer
+                    data.addAll(responseParts[i+2]);
                     list.setItems(data);
+                    numerPytania = Integer.parseInt(responseParts[i]);
+                    if (responseParts[i+2].equals("Koniec")) {
+                        firstButton.setVisible(false);
+                        secondButton.setVisible(false);
+                        thirdButton.setVisible(false);
+                        fourthButton.setVisible(false);
+                        Main.setGra(false);
+                    }
                     break;
                 case "A":
                     Main.setButton1(responseParts[i+2]);
                     firstButton.setText(responseParts[i+2]);
-                    wynikA.setText(responseParts[i+2]);
+                    firstButton.setDisable(false);
                     break;
                 case "B":
                     Main.setButton2(responseParts[i+2]);
                     secondButton.setText(responseParts[i+2]);
-                    wynikB.setText(responseParts[i+2]);
+                    secondButton.setDisable(false);
                     break;
                 case "C":
                     Main.setButton3(responseParts[i+2]);
                     thirdButton.setText(responseParts[i+2]);
-                    wynikC.setText(responseParts[i+2]);
+                    thirdButton.setDisable(false);
                     break;
                 case "D":
                     Main.setButton4(responseParts[i+2]);
                     fourthButton.setText(responseParts[i+2]);
+                    fourthButton.setDisable(false);
+                    break;
+                case "s1":
+                    wynikA.setText(responseParts[i+2]);
+                    break;
+                case "s2":
+                    wynikB.setText(responseParts[i+2]);
+                    break;
+                case "s3":
+                    wynikC.setText(responseParts[i+2]);
+                    break;
+                case "s4":
                     wynikD.setText(responseParts[i+2]);
                     break;
             }
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("To nie było pytanie, odpowiedź ani wynik głosowania");
+            System.out.println("To nie było pytanie, odpowiedź, wynik głosowania ani statystyki");
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();
@@ -197,14 +221,11 @@ public class Controller {
                     String[] responseParts = response.split("&&");
 
                     for (int i = 0; i < responseParts.length; i++) {
-                        if (responseParts[i].equals("1")) {
-                            /*System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc z listen responses");
-                            for (int j = 0; j < responseParts.length; j++) {
-                                System.out.println(j + ": " + responseParts[j] + " dla i: " + i);
-                            }*/
+                        try {
+                            Integer.parseInt(responseParts[i]);     //TODO: sprawdzamy czy jest numer pytania
                             receiveMessage(responseParts, i);
                             break;
-                        }
+                        } catch (NumberFormatException e) { }
                     }
                 }
                 else listenResponses();

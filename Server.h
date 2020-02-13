@@ -19,7 +19,7 @@ public:
 	
 	void deleteClient(int clientFd);
 	
-	void sendToAll(std::string line);
+	void sendToAll(char *line);
 
 	void runGame();
 };

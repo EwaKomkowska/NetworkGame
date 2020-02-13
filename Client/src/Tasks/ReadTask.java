@@ -18,11 +18,11 @@ public class ReadTask extends Task<String> {
         //TODO: obsluga przyjmowania tekstu
 
         int currentCount = 0;
-        byte[] buffer = new byte[100];      //TODO: czy odczytujemy długość?
+        byte[] buffer = new byte[200];      //TODO: czy odczytujemy długość?
         StringBuilder textMessage = new StringBuilder();
         int ind = -1;
 
-        while((currentCount = in.read(buffer, 0, 100)) > 0) {
+        while((currentCount = in.read(buffer, 0, 200)) > 0) {
 
             textMessage.append(new String(buffer, 0, currentCount));     //, StandardCharsets.US_ASCII)
             //System.out.println(currentCount + new String(textMessage));
@@ -34,6 +34,7 @@ public class ReadTask extends Task<String> {
 
         if (textMessage.length() == 0) {
             //TODO: czy jesli serwer aktywny, ale nic nie wysyła, to akceptować gre?
+            //tODO: dodac jakies wyjscie jak nie ma info od serwer po raz kolejny???
             System.out.println("Błąd podczas odczytu wiadomości od serwera.");
             return null;
         }

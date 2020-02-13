@@ -35,7 +35,7 @@ void Client::handleEvent(uint32_t events) {
 			//! Tutaj będzie potrzebna obsługa odpowiedzi
 			//&&x&&4;
 			std::string message = std::string(buffer);
-			printf("Otrzymano wiadomość %s", message);
+			printf("Otrzymano wiadomość %s", message.c_str());
 		}
 		
 		// mutex unlock

@@ -7,10 +7,10 @@
     <children>
         <Pane layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="550.0" style="-fx-font-weight: bold">
             <children>
-                <TextArea fx:id="wynikA" layoutX="50" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikA"/>
-                <TextArea fx:id="wynikB" layoutX="425" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikB"/>
-                <TextArea fx:id="wynikC" layoutX="50" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikC"/>
-                <TextArea fx:id="wynikD" layoutX="425" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikD"/>
+                <TextArea fx:id="wynikA" style = "-fx-focus-color: #90EE90; -fx-control-inner-background: #90EE90" layoutX="50" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikA"/>
+                <TextArea fx:id="wynikB" style = "-fx-focus-color: #90EE90; -fx-control-inner-background: #90EE90" layoutX="425" layoutY="160" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikB"/>
+                <TextArea fx:id="wynikC" style = "-fx-focus-color: #90EE90; -fx-control-inner-background: #90EE90" layoutX="50" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikC"/>
+                <TextArea fx:id="wynikD" style = "-fx-focus-color: #90EE90; -fx-control-inner-background: #90EE90" layoutX="425" layoutY="320" prefHeight="75" prefWidth="75" wrapText="true" focusTraversable="false" editable="false" text="WynikD"/>
                 <Button fx:id="firstButton" onAction="#chooseFirst" style="-fx-background-color: #1E90FF" layoutX="150.0" layoutY="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>
                 <Button fx:id="secondButton" onAction="#chooseSecond" style="-fx-background-color: #1E90FF" layoutX="300.0" layoutY="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>
                 <Button fx:id="thirdButton" onAction="#chooseThird" style="-fx-background-color: #1E90FF" layoutY="300.0" layoutX="150.0" prefWidth="100" prefHeight="100" wrapText="true"/>

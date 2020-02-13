@@ -89,12 +89,12 @@ void Server::deleteClient(int clientFd) {
 	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), 		clientsVector.end());
 }
 
-void Server::sendToAll(string line) {
+void Server::sendToAll(char *line) {
 	// mutex lock
 	for (int it : clientsVector) {
-		int count = write(it, &line, line.length());
-		printf("message sent");
-		if(count != (int) line.length())
+		int count = write(it, line, strlen(line));
+		printf("message sent\n");
+		if(count != (int) strlen(line))
 			perror("write failed");
 	}
 
@@ -108,9 +108,11 @@ void Server::runGame() {
 	string line;
 	getline(ifs, line);
 	
-	while (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
+	if (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
+//bylo while, ale teraz chce miec z pliku
 		
-		int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
+		/*tutaj testowane randomowe teksty 
+int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
 		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&0&&A to jest randomowy tekst\n"))
 			perror("write failed");
@@ -140,14 +142,95 @@ void Server::runGame() {
 		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
 			perror("write failed");
 
-		count = write(clientsVector[0], "&&1&&5&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
+		count = write(clientsVector[0], "&&1&&Q&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
 		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&2&&A to jest 5 randomowy tekst\n"))
 			perror("write failed");
 
 		printf("Wyslano wszystkie dane do klienta\n");
 		
+		sleep(10);*/
+
+		int count = write(clientsVector[0], "&&1&&A&&A to zmieniony tekst\n", strlen("&&1&&Q&&A to zmieniony tekst\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&Q&&A to zmieniony tekst\n"))
+			perror("write failed");
+		printf("Druga partia też\n");
 		sleep(10);
+
+//wysłanie statystyk 		//TODO: ogarnac to!!!
+		count = write(clientsVector[0], "&&1&&s4&&Stat4\n", strlen("&&1&&Qs&&Stat2\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
+			perror("write failed");
+		printf("Druga partia też\n");
+		sleep(10);
+
+count = write(clientsVector[0], "&&1&&s3&&Stat3\n", strlen("&&1&&Qs&&Stat2\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&sQ&&Stat2\n"))
+			perror("write failed");
+		printf("Druga partia też\n");
+		sleep(10);
+
+count = write(clientsVector[0], "&&1&&s2&&Stat2\n", strlen("&&1&&sQ&&Stat2\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
+			perror("write failed");
+		printf("Druga partia też\n");
+		sleep(10);
+
+count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
+		//printf("polaczono z klientem\n");
+		if(count != (int) strlen("&&1&&1Q&&Stat1\n"))
+			perror("write failed");
+		printf("Druga partia też\n");
+	}
+
+
+	printf("Obudziłem sie %s\n", line.c_str());
+	int numer=1; string sym="Q";
+	while (clientsVector.size() > 0) {
+		do {		//TODO: wydobyc numer pytania i znacznik
+		printf("Linia %s\n", line.c_str());
+		bool poprawne = true;
+			if (line.length() > 0) {
+				if (line.find(".a.") != string::npos || line.find(".b.") != string::npos || line.find(".c.") != string::npos || line.find(".d.") != string::npos) {
+					//TODO: wysylamy tylko jedną odpowiedź - sprawdzic czy to dobre
+					sym = "Q";
+					line = " ";		//zeby nie wywalilo bledu na pusty, a bylo widoczne, ze to nowa czesc
+					poprawne = false;
+				}
+				else if (line.find(".Q.") != string::npos || line.find("Koniec") != string::npos) //tutaj wysylamy - numer pytania sie przyda!!!
+					sym="Q";
+				else if (line.find(".A.") != string::npos) {
+					sym = "A";
+					poprawne = false;
+				}
+				else if (line.find(".B.") != string::npos) {
+					sym = "B";
+					poprawne = false;
+				}
+				else if (line.find(".C.") != string::npos) { 
+					sym = "C";
+					poprawne = false;
+				}
+				else if (line.find(".D.") != string::npos) {
+					sym = "D";
+					poprawne = false;
+				}
+			string codeLine = "&&";
+			codeLine += string (to_string(numer)) + string ("&&") + string(sym) + string("&&") + string (line);
+				char mes[codeLine.size() + 1];
+				strcpy(mes, codeLine.c_str());
+				if (poprawne)
+					sendToAll(mes);
+				printf("wyslalem %s\n", mes);
+				sleep(10);
+				if (line.find("Koniec") != string::npos) break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
+			}
+		} while (getline(ifs, line));		//TODO: czy na pewno skoczy sie na eof?
+		break;
 	}
 	gameStart = 0;
 }
