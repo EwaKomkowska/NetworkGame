@@ -192,6 +192,7 @@ count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
 	int numer=1; string sym="Q";
 	while (clientsVector.size() > 0) {
 		do {		//TODO: wydobyc numer pytania i znacznik
+			//TODO: wysylac statystyki
 		printf("Linia %s\n", line.c_str());
 		bool poprawne = true;
 			if (line.length() > 0) {
@@ -228,6 +229,7 @@ count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
 				printf("wyslalem %s\n", mes);
 				sleep(10);
 				if (line.find("Koniec") != string::npos) break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
+					//TODO: wrocic do urochomienia gry i jesli jest kolejny poziom to czekac na graczy
 			}
 		} while (getline(ifs, line));		//TODO: czy na pewno skoczy sie na eof?
 		break;

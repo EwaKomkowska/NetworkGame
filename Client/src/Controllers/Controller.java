@@ -61,6 +61,10 @@ public class Controller {
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
 
+        wynikA.setText(Main.getWynikA());
+        wynikB.setText(Main.getWynikB());
+        wynikC.setText(Main.getWynikC());
+        wynikD.setText(Main.getWynikD());
 
         list= new ListView<>();
         list.setPrefHeight(125);
@@ -70,8 +74,6 @@ public class Controller {
 
 
         ScrollPane scrollPane = new ScrollPane();
-        //scrollPane.prefWidthProperty().bind(list.widthProperty());
-        //scrollPane.prefHeightProperty().bind(list.heightProperty());
 
         scrollPane.setLayoutX(90);
         scrollPane.setLayoutY(10);
@@ -94,22 +96,20 @@ public class Controller {
         System.out.println("Zagłosowałam na opcje 1");
 
         //TODO: dodac numer pytania
-        SendTask sendTask = new SendTask("1", out);
+        SendTask sendTask = new SendTask("&&" + numerPytania + "&&1", out);
         new Thread(sendTask).start();
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
         thirdButton.setDisable(true);
         fourthButton.setDisable(true);
-
-        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseSecond() throws IOException {
         System.out.println("Zagłosowałam na opcje 2");
 
-        SendTask sendTask = new SendTask("2", out);
+        SendTask sendTask = new SendTask("&&" + numerPytania + "&&2", out);
         new Thread(sendTask).start();
 
         firstButton.setDisable(true);
@@ -122,31 +122,26 @@ public class Controller {
     private void chooseThird() throws IOException {
         System.out.println("Zagłosowałam na opcje 3");
 
-        SendTask sendTask = new SendTask("3", out);
+        SendTask sendTask = new SendTask("&&" + numerPytania + "&&3", out);
         new Thread(sendTask).start();
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
         thirdButton.setDisable(true);
         fourthButton.setDisable(true);
-
-        //Main.getMainStage().close();
     }
 
     @FXML
     private void chooseFourth() throws IOException {
         System.out.println("Zagłosowałam na opcje 4");
 
-        SendTask sendTask = new SendTask("4", out);
+        SendTask sendTask = new SendTask("&&" + numerPytania + "&&4", out);
         new Thread(sendTask).start();
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
         thirdButton.setDisable(true);
         fourthButton.setDisable(true);
-
-        System.out.println("Wysyłam komunikat o zaglosowaniu");
-        //Main.getMainStage().close();
     }
 
 
@@ -238,7 +233,7 @@ public class Controller {
     @FXML
     private void exit () {
         //TODO: zamknac gniazdo, zwolnic pamiec
-        SendTask sendTask = new SendTask("Koniec", out);
+        SendTask sendTask = new SendTask("&&" + numerPytania + "&&Koniec", out);
         new Thread(sendTask).start();
 
         Main.getMainStage().close();

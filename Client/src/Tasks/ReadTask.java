@@ -1,6 +1,5 @@
 package Tasks;
 
-import Controllers.Main;
 import javafx.concurrent.Task;
 
 import java.io.InputStream;
@@ -15,20 +14,16 @@ public class ReadTask extends Task<String> {
 
     @Override
     protected String call() throws Exception {
-        //TODO: obsluga przyjmowania tekstu
-
         int currentCount = 0;
         byte[] buffer = new byte[200];      //TODO: czy odczytujemy długość?
         StringBuilder textMessage = new StringBuilder();
-        int ind = -1;
 
         while((currentCount = in.read(buffer, 0, 200)) > 0) {
 
-            textMessage.append(new String(buffer, 0, currentCount));     //, StandardCharsets.US_ASCII)
-            //System.out.println(currentCount + new String(textMessage));
+            textMessage.append(new String(buffer, 0, currentCount));
 
             //TODO: co zrobic zeby skonczyc sluchanie i przetworzyc
-            if ((ind =textMessage.indexOf("&", 2)) > -1)   //tODO: czy tak moze zostac, bo minimum wiadomsci to 5?
+            if (textMessage.indexOf("&", 2) > -1)   //tODO: czy tak moze zostac, bo minimum wiadomsci to 5?
                 break;
         }
 

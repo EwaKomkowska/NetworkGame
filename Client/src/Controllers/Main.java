@@ -17,6 +17,45 @@ public class Main extends Application {
     private static String button2;
     private static String button3;
     private static String button4;
+
+    private static String wynikA;
+    private static String wynikB;
+    private static String wynikC;
+
+    public static String getWynikA() {
+        return wynikA;
+    }
+
+    public static void setWynikA(String wynikA) {
+        Main.wynikA = wynikA;
+    }
+
+    public static String getWynikB() {
+        return wynikB;
+    }
+
+    public static void setWynikB(String wynikB) {
+        Main.wynikB = wynikB;
+    }
+
+    public static String getWynikC() {
+        return wynikC;
+    }
+
+    public static void setWynikC(String wynikC) {
+        Main.wynikC = wynikC;
+    }
+
+    public static String getWynikD() {
+        return wynikD;
+    }
+
+    public static void setWynikD(String wynikD) {
+        Main.wynikD = wynikD;
+    }
+
+    private static String wynikD;
+
     private static Stage mainStage;
     private static boolean gra;
 

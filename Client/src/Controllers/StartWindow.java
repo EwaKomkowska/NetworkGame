@@ -43,14 +43,6 @@ public class StartWindow {
         return welcomeText;
     }
 
-    public void setStartButton(Button startButton) {
-        this.startButton = startButton;
-    }
-
-    public void setWelcomeText(Text welcomeText) {
-        this.welcomeText = welcomeText;
-    }
-
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
@@ -85,15 +77,6 @@ public class StartWindow {
             Main.getMainStage().close();
         }
 
-        //TODO: trzeba jeszcze przekazac parametry na in i out
         Main.setRoot("/resources/gameView");
-
-        /*Selector sel = Selector.open();
-
-        sock = SocketChannel.open();
-        sock.configureBlocking(false);
-        sock.connect(new InetSocketAddress(Main.host, Main.port));      //np. host: "localhost", port: 1234
-        SelectionKey sockKey = sock.register(sel, SelectionKey.OP_READ); // rejestracja kanału w selektorze
-                    //OP_READ ustawia do odczytu - można też   SelectionKey.OP_READ | SelectionKey.OP_WRITE                */
     }
 }

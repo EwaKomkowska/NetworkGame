@@ -41,15 +41,12 @@ public class ConnectTask extends Task<Void> {
                                     //TODO:Serwer sie uruchomil co dalej?
                                     System.out.println("Przyszła wiadomosc o grze!");
                                     break;
-                                case "1":
-                                    System.out.println("Dostałem pytania, odpowiedzi lub dalsza czesc");
-                                    for (String i : messageValue) {
-                                        System.out.println(i);
-                                    }
+                                default:
+                                    System.out.println("Możliwe, że dostałem pytania, odpowiedzi lub dalsza czesc");
+                                    //TODO: czy moze tak zostac, ze jest default'owe założenie, że przyszło pytanie?
                                     try {
                                         switch (messageValue[2]) {
-                                            case "Q":       //pytanie
-                                            case "5":       //odpowiedz
+                                            case "Q":       //pytanie lub odpowiedź
                                                 Main.setText(Main.getText() + messageValue[3]);
                                                 break;
                                             case "A":
@@ -63,6 +60,18 @@ public class ConnectTask extends Task<Void> {
                                                 break;
                                             case "D":
                                                 Main.setButton4(messageValue[3]);
+                                                break;
+                                            case "s1":
+                                                Main.setWynikA(messageValue[3]);
+                                                break;
+                                            case "s2":
+                                                Main.setWynikB(messageValue[3]);
+                                                break;
+                                            case "s3":
+                                                Main.setWynikC(messageValue[3]);
+                                                break;
+                                            case "s4":
+                                                Main.setWynikD(messageValue[3]);
                                                 break;
                                         }
                                     }catch (Exception e) {
@@ -85,7 +94,7 @@ public class ConnectTask extends Task<Void> {
                 st.getStartButton().setDisable(false);
                 st.getWelcomeText().setText("Welcome to our game. If you want to play, please press the button below!");
             } catch (IOException e) {
-                System.out.println("Czekam na połączenie z serwerem");
+                //nie mozna na razie polaczyc z serwerwm
             }
         }
         return null;
