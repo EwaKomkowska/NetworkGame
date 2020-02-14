@@ -54,7 +54,7 @@ Policeman: I say, "Yep, I know ya didn't."
 Lee: Not from me.
 Policeman: 'Cause guys in your position already said it enough? 
 
-2.c
+2.c.
 Lee: Every time?
 Policeman: EVERY time. 
 
@@ -143,7 +143,7 @@ Policeman: Sure don't.
 4.d.
 Lee says nothing.
 
-Q.5.
+5.Q.
 The policeman opens his mouth, about to speak, but notices Lee glaring at him and stays silent for a few moments.
 Policeman: Regardless, could be you just married the wrong woman.
 
@@ -159,9 +159,10 @@ Fuck you.
 5.D.
 ...
 
+
 Lee opens his mouth to speak, but decides not to, grunting dismissively.
 
-Q.6.
+6.Q.
 Police Radio: Riot in progress. All officers available for incoming 217's. Rolling calls and dispatches to all locations.
 A helicopter, two SWAT trucks, and several police cars pass by.
 Policeman: I'm driving this man once, h--he was the worst one. He wouldn't stop going on about how he didn't do it. He was an older fella. Big, soft eyes behind a pair of smart folk glasses, and he's just wailing back there, says it wasn't him. Crying and snotting all over, right where you're sitting.
@@ -195,7 +196,7 @@ Lee: So did he do it?
 6.d.
 Policeman: Well, blabbermouth, let me tell you something.
 
-Q.7.
+7.Q.
 Policeman: They caught the fucker red-handed! Stabbin' his wife, cutting her up as the boys came through the door! He sits in my car screaming bloody murder that it wasn't him! I think he actually believed it himself. It goes to show, people will up and go mad when they believe their life is over. Oh, I got another good one for ya. This one's a little bit less depressing and a bit more hilarious if I do say so.
 The policeman turns as he is talking, looking away from the road as someone wanders right in front of the car.
 Lee: Watch out!
