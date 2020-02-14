@@ -204,3 +204,115 @@ Policeman: This other time--
 The car crashes into the person on the road, veering out of control, through the guard rail, and off the edge of the cliff. Half-conscious, the man sees someone moving outside the car and hears screams and growls before passing out.
 
 Koniec
+
+
+Forest
+
+1.Q.
+Lee wakes up some time later.
+Lee: Ugh... Oww...shit.
+Lee tries to take off his handcuffs but is unable to.
+Lee: Thirsty... Ahh! Fuck, my leg.
+Lee looks at the large, bloody cut on his upper leg. He looks out the back window and sees the officer lying facedown on the ground with blood smeared behind him. Lee turns to the side window and grunts as he continually kicks it until it falls out of the car.
+
+1.A.
+Look at cop
+
+1.B.
+Look at shotgun
+
+1.C.
+Look at window
+
+1.a.
+Lee: Hey! Hey officer! Are you alright?! I'm still cuffed back here!
+Lee: OFFICER! That doesn't look good. He wasn't ejected from the car...
+Look at cop again
+Lee: He's not moving.
+Look at cop again
+Lee: He must have the handcuff keys on him.
+
+1.b.
+Lee: Why the hell did he have his gun out?
+Look at shotgun again
+Lee: Maybe it was tossed from the car during the wreck?
+
+1.c.
+Lee: I need to...drag myself out that window...
+
+2.Q.
+Lee climbs out of the window, landing painfully on the ground. He stands up and walks around the edge of the car, reaching the area where the officer is.
+
+2.A.
+Look at shotgun
+
+2.B.
+Take shotgun
+
+2.C.
+Take shotgun shell
+
+2.D. 
+Look at cop
+
+2.a.
+Lee: The officer's shotgun is over there.
+
+2.b.
+Lee kneels down to pick up the shotgun.
+Lee: Looks empty.
+He puts the shotgun down.
+Lee: It'll be easier to carry with these cuffs off.
+
+2.c.
+Lee leans down and picks up the shotgun shell, placing it in his inventory.
+
+2.d.
+Lee: Officer?
+Look at cop again
+Lee: Goddamn...
+
+3.Q.
+Lee approaches the officer and takes the keys. He tries to unlock his handcuffs but drops the keys.
+Lee: Shit.
+Lee leans down to pick up the keys that have fallen next to the officer's face. He unlocks his handcuffs and rubs his wrists. The officer starts groaning faintly.
+Lee: Uh, officer...?
+Lee falls backward as the officer growls and tries to grab him.
+Lee: Ahh! Holy shit!
+
+Look at cop
+Lee: What in the hell?!
+
+Look at cop again
+Lee: What the fuck are you?!
+
+Look at cop again
+Lee: What happened?! What HAPPENED?!
+
+Lee scoots backward as the officer crawls toward him.
+
+Lee: Get away from me!
+
+Lee picks up the shotgun next to him and tries to load it with the shotgun shell, but drops it.
+
+Lee: SHIT!
+
+Lee picks up the shell and loads the gun, pointing it at the officer.
+
+Lee: Don't make me do this...
+
+Lee shoots the officer in the head and throws the shotgun to the ground.
+
+Lee: Man.
+
+Optional interaction: look at cop
+Lee: His skin's all rotten...and he smells like shit. What the hell is this?
+
+Look at cop again
+Lee: Are you dead? HEY! ARE YOU DEAD?!
+
+Clementine stands in the distance and Lee calls out to her.
+
+Lee: HELP! Go get someone! There--there's been a shooting!
+
+Clementine runs away. Groaning, slow-moving zombies emerge from the forest. Lee tries to run, but trips over the officer's body and falls. He gets up and limps away as he is chased. He climbs over a fence to escape, crawling backwards as the zombies pound on the fence. Shots are fired in the distance, and the zombies leave to chase the sound.
