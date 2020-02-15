@@ -92,11 +92,15 @@ void Server::deleteClient(int clientFd) {
 void Server::sendToAll(char *line) {
 	// mutex lock
 	for (int it : clientsVector) {
-		int count = write(it, line, strlen(line));
-		printf("message sent\n");
-		if(count != (int) strlen(line))
-			perror("write failed");
-	}
+		try {
+			int count = write(it, line, strlen(line));
+			printf("message sent\n");
+			if(count != (int) strlen(line))
+				perror("write failed");
+		} catch {
+			printf("Error occured, disconnecting Client %d\n", it);
+			deleteClient(it);
+		}
 
 }
 
@@ -237,6 +241,20 @@ count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
 	gameStart = 0;
 }
 
+void Server::codeMessage(int choose) {
+	
+}
+
+void Server::sendStatistics(int s1, int s2, int s3, int s4) {
+	/*
+	&&1&&stat1&&10&&1&&stat2&&20
+	
+	pyt.1 = 10%
+	pyt.2 = 20%
+	*/
+	
+	
+};
 
 
 
