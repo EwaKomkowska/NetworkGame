@@ -22,5 +22,11 @@ public:
 	void sendToAll(char *line);
 
 	void runGame();
+
+	std::string codeMessage(std::string line, std::string symbol, int number);
+
+	std::string chooseCode(std::string line, std::string old);
+
+    void sendStatistics(int s1, int s2, int s3, int s4);
 };
 #endif
