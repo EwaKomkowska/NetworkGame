@@ -19,7 +19,6 @@ public class ReadTask extends Task<String> {
         StringBuilder textMessage = new StringBuilder();
 
         while((currentCount = in.read(buffer, 0, 200)) > 0) {
-
             textMessage.append(new String(buffer, 0, currentCount));
 
             //TODO: co zrobic zeby skonczyc sluchanie i przetworzyc
@@ -34,6 +33,7 @@ public class ReadTask extends Task<String> {
             return null;
         }
 
+        System.out.println(new String(textMessage));
         return new String(textMessage);
     }
 }

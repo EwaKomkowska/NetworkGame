@@ -218,8 +218,7 @@ public class Controller {
                     for (int i = 0; i < responseParts.length; i++) {
                         try {
                             Integer.parseInt(responseParts[i]);     //TODO: sprawdzamy czy jest numer pytania
-                            receiveMessage(responseParts, i);
-                            break;
+                            receiveMessage(responseParts, i);       //tu był break, ale nie odczytuje wtedy więcej wiadomości
                         } catch (NumberFormatException e) { }
                     }
                 }

@@ -49,7 +49,7 @@ Server::Server(long port) {
 }
 
 Server::~Server() {
-	clientsVector.clear();	//TODO: nie lepiej erase od razu?
+	clientsVector.clear();
 	close(fd);
 	delete this;
 }
@@ -64,7 +64,7 @@ void Server::handleEvent(uint32_t events) {
 		
 		// Dodawanie nowego uczestnika
 		Client *clientt = new Client(clientFd);
-		clientsVector.push_back(clientFd);		//TODO: bylo append - moze byc tak?
+		clientsVector.push_back(clientFd);
 		
 		printf("Player in game!\n");
 
@@ -109,47 +109,6 @@ void Server::runGame() {
 	getline(ifs, line);
 	
 	if (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
-//bylo while, ale teraz chce miec z pliku
-		
-		/*tutaj testowane randomowe teksty 
-int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&0&&A to jest randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&A&&A to jest kolejny randomowy tekst\n", strlen("&&1&&2&&A to jest kolejny randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&A&&A to jest kolejny randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&B&&A to jest 1 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&B&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&C&&A to jest 2 randomowy tekst\n", strlen("&&1&&C&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-    
-		count = write(clientsVector[0], "&&1&&D&&A to jest 3 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-    
-		count = write(clientsVector[0], "&&1&&Q&&A to jest 4 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&Q&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 5 randomowy tekst\n"))
-			perror("write failed");
-
-		printf("Wyslano wszystkie dane do klienta\n");
-		
-		sleep(10);*/
 
 		int count = write(clientsVector[0], "&&1&&A&&A to zmieniony tekst\n", strlen("&&1&&Q&&A to zmieniony tekst\n"));
 		//printf("polaczono z klientem\n");
@@ -159,9 +118,9 @@ int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("
 		sleep(10);
 
 //wysłanie statystyk 		//TODO: ogarnac to!!!
-		count = write(clientsVector[0], "&&1&&s4&&Stat4\n", strlen("&&1&&Qs&&Stat2\n"));
+		count = write(clientsVector[0], "&&1&&s4&&Stat4\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n", strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n"));
 		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
+		if(count != (int) strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n"))
 			perror("write failed");
 		printf("Druga partia też\n");
 		sleep(10);
