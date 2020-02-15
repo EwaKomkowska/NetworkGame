@@ -61,6 +61,11 @@ public class Controller {
         thirdButton.setText(Main.getButton3());
         fourthButton.setText(Main.getButton4());
 
+        firstButton.setDisable(true);
+        secondButton.setDisable(true);
+        thirdButton.setDisable(true);
+        fourthButton.setDisable(true);
+
         wynikA.setText(Main.getWynikA());
         wynikB.setText(Main.getWynikB());
         wynikC.setText(Main.getWynikC());
@@ -69,13 +74,13 @@ public class Controller {
         list= new ListView<>();
         list.setPrefHeight(125);
         list.setPrefWidth(450);
-        list.setLayoutX(100);
+        list.setLayoutX(80);
         list.setLayoutY(60);
 
 
         ScrollPane scrollPane = new ScrollPane();
 
-        scrollPane.setLayoutX(90);
+        scrollPane.setLayoutX(80);
         scrollPane.setLayoutY(10);
 
         data = FXCollections.observableArrayList();
@@ -159,6 +164,13 @@ public class Controller {
                         thirdButton.setVisible(false);
                         fourthButton.setVisible(false);
                         Main.setGra(false);
+                        Thread.sleep(1000);
+                        exit();
+                    } else {        //if question/answer - we can't vote
+                        firstButton.setDisable(true);
+                        secondButton.setDisable(true);
+                        thirdButton.setDisable(true);
+                        fourthButton.setDisable(true);
                     }
                     break;
                 case "A":
@@ -205,37 +217,37 @@ public class Controller {
 
 
     public void listenResponses() {
-        ReadTask readTask = new ReadTask(in);
-        new Thread(readTask).start();
-        readTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent t) {
-                String response = readTask.getValue();
-                if (response != null) {
-                    //TODO: jaki znacznik rozdziela wiadomosci?
-                    String[] responseParts = response.split("&&");
+            ReadTask readTask = new ReadTask(in);
+            new Thread(readTask).start();
+            readTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent t) {
+                    String response = readTask.getValue();
+                    if (response != null) {
+                        //TODO: jaki znacznik rozdziela wiadomosci?
+                        String[] responseParts = response.split("&&");
 
-                    for (int i = 0; i < responseParts.length; i++) {
-                        try {
-                            Integer.parseInt(responseParts[i]);     //TODO: sprawdzamy czy jest numer pytania
-                            receiveMessage(responseParts, i);
-                            break;
-                        } catch (NumberFormatException e) { }
+                        for (int i = 0; i < responseParts.length; i++) {
+                            try {
+                                Integer.parseInt(responseParts[i]);     //TODO: sprawdzamy czy jest numer pytania
+                                receiveMessage(responseParts, i);       //tu był break, ale nie odczytuje wtedy więcej wiadomości
+                            } catch (NumberFormatException e) {
+                            }
+                        }
                     }
+                    listenResponses();
                 }
-                else listenResponses();
-            }
-        });
+            });
     }
 
 
 
     @FXML
     private void exit () {
-        //TODO: zamknac gniazdo, zwolnic pamiec
         SendTask sendTask = new SendTask("&&" + numerPytania + "&&Koniec", out);
         new Thread(sendTask).start();
 
         Main.getMainStage().close();
+        //TODO: zamknac gniazdo, zwolnic pamiec //exit() nie działa, ale jak server zamkniety to spoko
     }
 }

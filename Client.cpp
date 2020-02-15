@@ -27,7 +27,7 @@ void Client::handleEvent(uint32_t events) {
 		// otrzymano wiadomość od klienta
 		
 		char buffer[50];
-		int count = read(fd, buffer, sizeof(buffer));		//TODO: było readData - dlaczego???
+		int count = read(fd, buffer, sizeof(buffer));
 		// mutex lock
 		
 		//! AND GAME STARTED

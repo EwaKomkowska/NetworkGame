@@ -1,4 +1,4 @@
-Police Car
+"Police Car"
 
 1.Q.
 A police officer is driving a police car down the road in the daytime. He adjusts the rearview mirror in his car to look at the passenger, Lee, who is handcuffed in the backseat. 
@@ -212,10 +212,8 @@ Lee: Watch out!
 Policeman: This other time--
 The car crashes into the person on the road, veering out of control, through the guard rail, and off the edge of the cliff. Half-conscious, the man sees someone moving outside the car and hears screams and growls before passing out.
 
-Koniec
 
-
-Forest
+"Forest"
 
 1.Q.
 Lee wakes up some time later.

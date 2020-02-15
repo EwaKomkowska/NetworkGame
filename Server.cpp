@@ -7,6 +7,7 @@
 #include <vector>
 #include <ctime>
 #include <thread>
+#include <boost/lexical_cast.hpp>       //string -> int
 
 #include "Client.h"
 #include "Server.h"
@@ -49,7 +50,7 @@ Server::Server(long port) {
 }
 
 Server::~Server() {
-	clientsVector.clear();	//TODO: nie lepiej erase od razu?
+	clientsVector.clear();
 	close(fd);
 	delete this;
 }
@@ -64,7 +65,7 @@ void Server::handleEvent(uint32_t events) {
 		
 		// Dodawanie nowego uczestnika
 		Client *clientt = new Client(clientFd);
-		clientsVector.push_back(clientFd);		//TODO: bylo append - moze byc tak?
+		clientsVector.push_back(clientFd);
 		
 		printf("Player in game!\n");
 
@@ -92,15 +93,17 @@ void Server::deleteClient(int clientFd) {
 void Server::sendToAll(char *line) {
 	// mutex lock
 	for (int it : clientsVector) {
-		try {
-			int count = write(it, line, strlen(line));
-			printf("message sent\n");
-			if(count != (int) strlen(line))
-				perror("write failed");
-		} catch {
-			printf("Error occured, disconnecting Client %d\n", it);
-			deleteClient(it);
-		}
+	    try {
+        	int count = write(it, line, strlen(line));
+        	printf("message sent %s\n", line);
+
+        	if(count != (int) strlen(line))
+        		perror("write failed");
+        } catch (...) {     //TODO: jaki to blad?
+        	printf("Error occured, disconnecting Client %d\n", it);
+        	deleteClient(it);
+        }
+	}
 
 }
 
@@ -110,150 +113,109 @@ void Server::runGame() {
 	ifstream ifs;
 	ifs.open("script.txt", ios::in);
 	string line;
-	getline(ifs, line);
 	
 	if (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
-//bylo while, ale teraz chce miec z pliku
-		
-		/*tutaj testowane randomowe teksty 
-int count = write(clientsVector[0], "&&0&&A to jest randomowy tekst\n", strlen("&&0&&A to jest randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&0&&A to jest randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&A&&A to jest kolejny randomowy tekst\n", strlen("&&1&&2&&A to jest kolejny randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&A&&A to jest kolejny randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&B&&A to jest 1 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&B&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&C&&A to jest 2 randomowy tekst\n", strlen("&&1&&C&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-    
-		count = write(clientsVector[0], "&&1&&D&&A to jest 3 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-    
-		count = write(clientsVector[0], "&&1&&Q&&A to jest 4 randomowy tekst\n", strlen("&&1&&2&&A to jest 4 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 4 randomowy tekst\n"))
-			perror("write failed");
-
-		count = write(clientsVector[0], "&&1&&Q&&A to jest 5 randomowy tekst\n", strlen("&&1&&2&&A to jest 5 randomowy tekst\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&2&&A to jest 5 randomowy tekst\n"))
-			perror("write failed");
-
-		printf("Wyslano wszystkie dane do klienta\n");
-		
-		sleep(10);*/
 
 		int count = write(clientsVector[0], "&&1&&A&&A to zmieniony tekst\n", strlen("&&1&&Q&&A to zmieniony tekst\n"));
-		//printf("polaczono z klientem\n");
 		if(count != (int) strlen("&&1&&Q&&A to zmieniony tekst\n"))
 			perror("write failed");
-		printf("Druga partia też\n");
-		sleep(10);
+		sleep(1);
 
-//wysłanie statystyk 		//TODO: ogarnac to!!!
-		count = write(clientsVector[0], "&&1&&s4&&Stat4\n", strlen("&&1&&Qs&&Stat2\n"));
-		//printf("polaczono z klientem\n");
-		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
+        //wysłanie statystyk 		//TODO: ogarnac to!!!
+		count = write(clientsVector[0], "&&1&&s4&&Stat4\n&&1&&s3&&Stat3\n&&1&&s2&&Stat2\n&&1&&s1&&Stat1\n", strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s2&&Stat2\n&&1&&s1&&Stat1\n"));
+		if(count != (int) strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n"))
 			perror("write failed");
-		printf("Druga partia też\n");
-		sleep(10);
+		sleep(1);
 
-count = write(clientsVector[0], "&&1&&s3&&Stat3\n", strlen("&&1&&Qs&&Stat2\n"));
-		//printf("polaczono z klientem\n");
+        count = write(clientsVector[0], "&&1&&s3&&Stat3\n", strlen("&&1&&Qs&&Stat2\n"));
 		if(count != (int) strlen("&&1&&sQ&&Stat2\n"))
 			perror("write failed");
-		printf("Druga partia też\n");
-		sleep(10);
+		sleep(1);
 
-count = write(clientsVector[0], "&&1&&s2&&Stat2\n", strlen("&&1&&sQ&&Stat2\n"));
-		//printf("polaczono z klientem\n");
+        count = write(clientsVector[0], "&&1&&s2&&Stat2\n", strlen("&&1&&sQ&&Stat2\n"));
 		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
 			perror("write failed");
-		printf("Druga partia też\n");
-		sleep(10);
+		sleep(1);
 
-count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
-		//printf("polaczono z klientem\n");
+        count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
 		if(count != (int) strlen("&&1&&1Q&&Stat1\n"))
 			perror("write failed");
-		printf("Druga partia też\n");
 	}
 
+    int number = 1; string symbol = "Q";
+	while (clientsVector.size() > 0 && getline(ifs, line)) {	//TODO: wydobyc numer pytania i wysylac statystyki
 
-	printf("Obudziłem sie %s\n", line.c_str());
-	int numer=1; string sym="Q";
-	while (clientsVector.size() > 0) {
-		do {		//TODO: wydobyc numer pytania i znacznik
-			//TODO: wysylac statystyki
-		printf("Linia %s\n", line.c_str());
-		bool poprawne = true;
-			if (line.length() > 0) {
-				if (line.find(".a.") != string::npos || line.find(".b.") != string::npos || line.find(".c.") != string::npos || line.find(".d.") != string::npos) {
-					//TODO: wysylamy tylko jedną odpowiedź - sprawdzic czy to dobre
-					sym = "Q";
-					line = " ";		//zeby nie wywalilo bledu na pusty, a bylo widoczne, ze to nowa czesc
-					poprawne = false;
-				}
-				else if (line.find(".Q.") != string::npos || line.find("Koniec") != string::npos) //tutaj wysylamy - numer pytania sie przyda!!!
-					sym="Q";
-				else if (line.find(".A.") != string::npos) {
-					sym = "A";
-					poprawne = false;
-				}
-				else if (line.find(".B.") != string::npos) {
-					sym = "B";
-					poprawne = false;
-				}
-				else if (line.find(".C.") != string::npos) { 
-					sym = "C";
-					poprawne = false;
-				}
-				else if (line.find(".D.") != string::npos) {
-					sym = "D";
-					poprawne = false;
-				}
-			string codeLine = "&&";
-			codeLine += string (to_string(numer)) + string ("&&") + string(sym) + string("&&") + string (line);
-				char mes[codeLine.size() + 1];
-				strcpy(mes, codeLine.c_str());
-				if (poprawne)
-					sendToAll(mes);
-				printf("wyslalem %s\n", mes);
-				sleep(10);
-				if (line.find("Koniec") != string::npos) break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
-					//TODO: wrocic do urochomienia gry i jesli jest kolejny poziom to czekac na graczy
-			}
-		} while (getline(ifs, line));		//TODO: czy na pewno skoczy sie na eof?
-		break;
+        if (line != "") {           //empty line is useless for us
+            bool correct = true;
+
+            symbol = chooseCode(line, symbol);
+
+            if (symbol == "Q") {
+                try {
+                number = stoi(&line[0]);
+                printf("%i\n", number);
+                } catch (...) {
+                    //printf("In this line there isn't any number\n");
+                }
+            } else if (symbol == "odp") {
+                //TODO: dodac warunek  && line.find(poprawne_glosowanie)
+                symbol = "Q";
+            }
+
+            string codeLine = codeMessage(line, symbol, number);
+            char mes[codeLine.size() + 1];
+            strcpy(mes, codeLine.c_str());
+
+            //if (correct)      //TODO: jak sprawdzic czy to jest linia z numerem czy tekstem
+            sendToAll(mes);
+
+            sleep(1);
+
+            if (line.find("Koniec") != string::npos)
+                break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
+                //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
+        }
 	}
 	gameStart = 0;
 }
 
-void Server::codeMessage(int choose) {
-	
+string Server::codeMessage(string line, string symbol, int number) {
+	string codeLine = "&&";
+    codeLine += string (to_string(number)) + string ("&&") + string(symbol) + string("&&") + string (line);
+    return codeLine;
+}
+
+
+string Server::chooseCode(string line, string old) {
+    if (line.find(".a.") != string::npos || line.find(".b.") != string::npos || line.find(".c.") != string::npos || line.find(".d.") != string::npos)
+        //TODO: wysylamy tylko jedną odpowiedź - sprawdzic czy to dobre
+        return "odp";
+
+    if (line.find(".Q.") != string::npos || line.find("Koniec") != string::npos)   //tutaj wysylamy - numer pytania sie przyda!!!
+        return "Q";
+
+    if (line.find(".A.") != string::npos)
+        return "A";
+
+    if (line.find(".B.") != string::npos)
+        return "B";
+
+    if (line.find(".C.") != string::npos)
+        return "C";
+
+    if (line.find(".D.") != string::npos)
+        return "D";
+
+    return old;     //last symbol is good now
 }
 
 void Server::sendStatistics(int s1, int s2, int s3, int s4) {
 	/*
 	&&1&&stat1&&10&&1&&stat2&&20
-	
+
 	pyt.1 = 10%
 	pyt.2 = 20%
 	*/
-	
-	
 };
 
 
