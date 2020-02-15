@@ -22,5 +22,9 @@ public:
 	void sendToAll(char *line);
 
 	void runGame();
+	
+	void codeMessage(int choose);
+	
+	void sendStatistics(int s1, int s2, int s3, int s4);
 };
 #endif
