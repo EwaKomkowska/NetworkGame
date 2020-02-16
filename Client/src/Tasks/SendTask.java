@@ -19,9 +19,9 @@ public class SendTask extends Task<Void> {
     @Override
     protected Void call() {
         try {
-            String message = "&&" + text + "&&";    //TODO: czy to wystarczy do wysłania odpowierdzi?
+            String message = text;    //TODO: czy to wystarczy do wysłania odpowierdzi?
             // czy ma być jeszcze coś odnośnie końca, czy można podać koniec tylko?
-            out.write(message.getBytes(StandardCharsets.UTF_8));
+            out.write(message.getBytes());      //StandardCharsets.UTF_8
 
         } catch (IOException e) {
             System.out.println("Error until sending a message!");
