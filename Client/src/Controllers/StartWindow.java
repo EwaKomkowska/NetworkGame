@@ -19,21 +19,19 @@ public class StartWindow {
     @FXML
     private Text welcomeText;
 
-    private Socket socket;
+    private static Socket socket;
     private static InputStream in;
+    private static OutputStream out;
 
     public static InputStream getIn() {
         return in;
     }
 
-    public OutputStream getOut() {
+    public static OutputStream getOut() {
         return out;
     }
 
-    private OutputStream out;
-
-    public Socket getSocket() { return socket; }
-
+    public static Socket getSocket() { return socket; }
 
     public Button getStartButton() {
         return startButton;
@@ -44,15 +42,15 @@ public class StartWindow {
     }
 
     public void setSocket(Socket socket) {
-        this.socket = socket;
+        StartWindow.socket = socket;
     }
 
     public void setIn(InputStream in) {
-        this.in = in;
+        StartWindow.in = in;
     }
 
     public void setOut(OutputStream out) {
-        this.out = out;
+        StartWindow.out = out;
     }
 
     @FXML

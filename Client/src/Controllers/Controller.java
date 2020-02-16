@@ -56,6 +56,7 @@ public class Controller {
     @FXML
     private void initialize() throws IOException {
         in = StartWindow.getIn();
+        out = StartWindow.getOut();
         firstButton.setText(Main.getButton1());
         secondButton.setText(Main.getButton2());
         thirdButton.setText(Main.getButton3());
@@ -248,6 +249,15 @@ public class Controller {
         new Thread(sendTask).start();
 
         Main.getMainStage().close();
-        //TODO: zamknac gniazdo, zwolnic pamiec //exit() nie działa, ale jak server zamkniety to spoko
+        try {
+            in.close();
+            out.close();
+            StartWindow.getSocket().close();
+            StartWindow.getIn().close();
+            StartWindow.getOut().close();
+        }catch (IOException e) {
+            System.out.println("Ther is a problem with close connection.");
+        }
+
     }
 }

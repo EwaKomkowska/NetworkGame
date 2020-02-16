@@ -87,7 +87,7 @@ void Server::handleEvent(uint32_t events) {
 }
 
 void Server::deleteClient(int clientFd) {
-	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), 		clientsVector.end());
+	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), clientsVector.end());
 }
 
 void Server::sendToAll(char *line) {
@@ -95,7 +95,7 @@ void Server::sendToAll(char *line) {
 	for (int it : clientsVector) {
 	    try {
         	int count = write(it, line, strlen(line));
-        	printf("message sent %s\n", line);
+        	//printf("message sent %s\n", line);
 
         	if(count != (int) strlen(line))
         		perror("write failed");
@@ -153,7 +153,7 @@ void Server::runGame() {
             if (symbol == "Q") {
                 try {
                 number = stoi(&line[0]);
-                printf("%i\n", number);
+                //printf("%i\n", number);
                 } catch (...) {
                     //printf("In this line there isn't any number\n");
                 }

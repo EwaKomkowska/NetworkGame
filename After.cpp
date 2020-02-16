@@ -57,7 +57,12 @@ int main(int argc, char ** argv) {
 	}
 	
 	// ======CLOSE======
-	close(server1->fd);
+	try {
+	    close(server1->fd);
+	    close(server1->epollFd);
+	} catch (...) {
+	    printf("Failed to close sockets\n");
+	}
 	delete server1;
 	return 0;
 	
