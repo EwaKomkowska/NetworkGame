@@ -11,13 +11,21 @@
 
 #include "Client.h"
 #include "Server.h"
+#include "global.h"
 
 using namespace std;
+
+extern std::string firstAnswer;
+extern std::mutex mutex_firstAnswer;
 
 Server::Server(long port) {
 
     questionNumber = 0;
     odpowiedz = "";
+
+    mutex_firstAnswer.lock();
+    firstAnswer = "";
+    mutex_firstAnswer.unlock();
 	
 	// ======CLEAR=VECTOR======
 	clientsVector.clear();
@@ -135,8 +143,8 @@ void Server::runGame() {
 
                 if (symbol1 == "odp") {
                     if (odpowiedz == "") {
-                    sleep(10);
-                    sendStatistics(0,0,0,0);     //only one sending statistics
+                        sleep(10);
+                        sendStatistics(0,0,0,0);     //only one sending statistics
                     }
 
                     if (line.find(odpowiedz) != string::npos) {
@@ -158,6 +166,10 @@ void Server::runGame() {
                         odpowiedz = "";
                         number = stoi(&line[0]);
                         questionNumber = number;
+
+                        mutex_firstAnswer.lock();
+                        firstAnswer = "";
+                        mutex_firstAnswer.unlock();
                         }
                     catch (...) {
                          //printf("In this line there isn't any number\n");
@@ -171,7 +183,7 @@ void Server::runGame() {
 
                     if (correct)
                         sendToAll(mes);
-                    //sleep(2);
+                    sleep(2);
                     if (line.find("Koniec") != string::npos)
                         break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
                         //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
@@ -214,34 +226,25 @@ string Server::chooseCode(string line, string old) {
 void Server::chooseMax(int s1, int s2, int s3, int s4) {
      int maxi = max(max(max(s1,s2),s3),s4);
      //printf("%d\n", maxi);
-     /*if (s1 > s2)
-        if (s1 > s3)
-            if (s1 > s4) {
+     if ((s1 == maxi && s1 == s2) || (s1 == maxi && s1 == s3) || (s1 == maxi && s1 == s4) || (s3 == maxi && s2 == s2) || (s4 == maxi && s4 == s2) || (s3 == maxi && s3 == s4)) {        //REMIS
+        mutex_firstAnswer.lock();
+        switch (stoi(firstAnswer)) {
+            case 1:
                 odpowiedz = ".a.";
-                }
-            else if (s4 > s1) {
+                break;
+            case 2:
+                odpowiedz = ".b.";
+                break;
+            case 3:
+                odpowiedz = ".c.";
+                break;
+            case 4:
                 odpowiedz = ".d.";
-            }
-        else if (s3 > s4){
-             odpowiedz = ".c.";
+                break;
         }
-        else if (s4 > s3) {
-            odpowiedz = ".d.";
-        }
-     else if (s2 > s3)
-        if (s2 > s4) {
-            odpowiedz = ".b.";
-        }
-        else if (s4 > s2) {
-            odpowiedz = ".d.";
-        }
-     else if (s3 > s4){
-        odpowiedz = ".c.";
+        mutex_firstAnswer.unlock();
      }
-     else if (s4 > s3) {
-        odpowiedz = ".d.";
-     }*/
-     if (s1 == maxi)       //REMIS
+     else if (s1 == maxi)
         odpowiedz = ".a.";
      else if (s2 == maxi)
         odpowiedz = ".b.";

@@ -6,6 +6,9 @@
 #include "Client.h"
 #include "Server.h"
 
+extern std::string firstAnswer;
+extern std::mutex mutex_firstAnswer;
+
 using namespace std;
 
 Client::Client(int clientFd, int epoll) {
@@ -40,6 +43,12 @@ void Client::handleEvent(uint32_t events) {
 
 			numerPytania = stoi(&message[2]);
 			odpowiedz = stoi(&message[5]);
+			mutex_firstAnswer.lock();
+            if (firstAnswer == "") {
+                firstAnswer = &message[5];
+                printf("Zmienilem pierwsza wiadomosc\n");
+                }
+            mutex_firstAnswer.unlock();
 		}
 		
 		read_mutex.unlock();

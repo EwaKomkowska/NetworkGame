@@ -1,5 +1,6 @@
 #ifndef server
 #define server
+
 #include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <string>
@@ -8,6 +9,7 @@
 
 #include "Handler.h"
 #include "Client.h"
+
 
 class Server : public Handler {
 private:

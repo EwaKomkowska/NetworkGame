@@ -75,13 +75,13 @@ public class Controller {
         list= new ListView<>();
         list.setPrefHeight(125);
         list.setPrefWidth(450);
-        list.setLayoutX(80);
+        list.setLayoutX(60);
         list.setLayoutY(60);
 
 
         ScrollPane scrollPane = new ScrollPane();
 
-        scrollPane.setLayoutX(80);
+        scrollPane.setLayoutX(60);
         scrollPane.setLayoutY(10);
 
         data = FXCollections.observableArrayList();
