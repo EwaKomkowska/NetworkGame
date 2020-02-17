@@ -19,10 +19,12 @@ Client::Client(int clientFd, int epoll) {
 
 Client::~Client() {
 	// delete from vector
-	//epoll_ctl(getEpoll(), EPOLL_CTL_DEL, fd, nullptr);
+	epoll_ctl(getEpoll(), EPOLL_CTL_DEL, fd, nullptr);
 	//Server::deleteClient(fd);
-	shutdown(fd, SHUT_RDWR);
-	close(fd);
+	try {
+	    shutdown(fd, SHUT_RDWR);
+	    close(fd);
+	} catch (...) {}
 }
 
 void Client::handleEvent(uint32_t events) {
@@ -49,6 +51,10 @@ void Client::handleEvent(uint32_t events) {
                 printf("Zmienilem pierwsza wiadomosc\n");
                 }
             mutex_firstAnswer.unlock();
+		}
+		else {
+		    numerPytania = 0;
+		    odpowiedz = 0;
 		}
 		
 		read_mutex.unlock();

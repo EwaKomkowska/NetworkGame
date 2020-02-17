@@ -22,8 +22,6 @@ Server * server1;
 
 using namespace std;
 
-//! Komentarze z takim oznaczeniem są wskazówką w razie błędów kompilacji
-
 int main(int argc, char ** argv) {
     if(argc!=2){
         printf("Usage: %s <port>\n", argv[0]);
@@ -31,12 +29,13 @@ int main(int argc, char ** argv) {
     }
     char * endp;
     long port = strtol(argv[1], &endp, 10);
-    if(*endp || port > 65535 || port < 1){
+    if(*endp || port > 65535 || port < 1) {
         printf("Usage: %s <port>\n", argv[0]);
         return 1;
     }
     
 	server1 = new Server(port);
+	signal(SIGPIPE, SIG_IGN);
 	
 	// =======EPOLL=EVENTS=CATCH========
 	

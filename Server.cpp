@@ -93,7 +93,6 @@ void Server::handleEvent(uint32_t events) {
 			mutex_vector.unlock();
 		};
 		 
-		 
 	}
 }
 
@@ -112,15 +111,42 @@ void Server::deleteClient(int clientFd) {
 
 void Server::sendToAll(char *line) {
 	mutex_vector.lock();
+	vector <int> invalidClients;
 	for (auto &it : clientsVector) {
-	    //try {
+	    try {
         	int count = write(it->fd, line, strlen(line));
-        	//printf("message sent %s\n", line);
+        	printf("message sent %s\n", line);
 
-        	if(count != (int) strlen(line))
+        	if(count != (int) strlen(line)) {
         		perror("write failed");
+        		invalidClients.push_back(it->fd);
+        		}
+
+        }catch (...) {
+            printf("Error with sendToAll\n");
+        }
 	}
+	/*auto it = clientsVector.begin();
+      	while(it != clientsVector.end()) {
+      	    try {
+              	int count = write(it->fd, line, strlen(line));
+              	printf("message sent %s\n", line);
+
+              	if(count != (int) strlen(line)) {
+              		perror("write failed");
+              		Client * cl = *it;
+              		delete cl;
+              		it = clientsVector.erase(it);
+              	} else
+                      it++;
+              }catch (...) {
+                  printf("Error with sendToAll\n");
+              }
+      	}*/
 	mutex_vector.unlock();
+	for (int i = 0; i < invalidClients.size(); i++)
+        deleteClient(invalidClients[i]);
+    invalidClients.clear();
 }
 
 
@@ -183,7 +209,6 @@ void Server::runGame() {
 
                     if (correct)
                         sendToAll(mes);
-                    sleep(2);
                     if (line.find("Koniec") != string::npos)
                         break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
                         //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
@@ -191,6 +216,18 @@ void Server::runGame() {
             }
         }
 	}
+
+    mutex_vector.lock();
+	auto it = clientsVector.begin();
+	while(it != clientsVector.end()) {
+	    Client *cl = *it;
+	    delete cl;
+	    it++;
+	}
+	clientsVector.clear();
+	printf("po while'u %d\n", clientsVector.size());
+	mutex_vector.unlock();
+
 	gameStart = 0;
 }
 
@@ -279,9 +316,8 @@ void Server::sendStatistics(int s1, int s2, int s3, int s4) {
     //printf("Statystyki wynik %d, %d, %d, %d\n", s1, s2, s3, s4);
     if (s1 != 0 || s2 != 0 || s3 != 0 || s4 != 0) {
         chooseMax(s1, s2, s3, s4);
-        //printf("Wchodzę\n");
     }
-    else odpowiedz = "####";
+    else odpowiedz = ".a.";     //nie wybrano zadnej odpowiedzi
 
     char mes[message.size() + 1];
     strcpy(mes, message.c_str());
