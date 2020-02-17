@@ -164,8 +164,8 @@ public class Controller {
                         secondButton.setVisible(false);
                         thirdButton.setVisible(false);
                         fourthButton.setVisible(false);
+                        Thread.sleep(10000);
                         Main.setGra(false);
-                        Thread.sleep(1000);
                         exit();
                     } else {        //if question/answer - we can't vote
                         firstButton.setDisable(true);
@@ -208,8 +208,7 @@ public class Controller {
                     break;
             }
         }catch (Exception e) {
-            System.out.println("Error with text messsages\n");
-            System.out.println(responseParts[i+1]);
+            System.out.println("Error with text messsages" + responseParts[i-1] + responseParts[i]);
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();

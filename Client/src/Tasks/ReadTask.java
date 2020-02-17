@@ -15,10 +15,10 @@ public class ReadTask extends Task<String> {
     @Override
     protected String call() throws Exception {
         int currentCount = 0;
-        byte[] buffer = new byte[200];
+        byte[] buffer = new byte[1000];
         StringBuilder textMessage = new StringBuilder();
 
-        while((currentCount = in.read(buffer, 0, 200)) > 0) {
+        while((currentCount = in.read(buffer, 0, 1000)) > 0) {
             textMessage.append(new String(buffer, 0, currentCount));
 
             if (textMessage.indexOf("&", 2) > -1)

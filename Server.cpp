@@ -75,6 +75,7 @@ void Server::handleEvent(uint32_t events) {
 		if (clientsVector.size() > 0 && gameStart == 0) {
 			// ======NEW=GAME======
 			mutex_vector.unlock();
+			sleep(20);
 			gameStart = 1;
 			printf("======STARTING=NEW=GAME======\n");
 			std::thread game (&Server::runGame, this);	//TODO: czy to poprawne?
@@ -130,40 +131,47 @@ void Server::runGame() {
                 bool correct = true;
 
                 string symbol1 = chooseCode(line, symbol);
-                if (symbol1 != symbol) {
-                    correct = false;
-                    symbol = symbol1;
-                } else {
-                    symbol = symbol1;
-                }
-                if (correct) {
-                    if (symbol == "Q") {
-                        try {
-                            odpowiedz = "";         //zeby do momentu nie wyslania odpowiedzi bylo puste
-                            number = stoi(&line[0]);
-                            questionNumber = number;
-                        } catch (...) {
-                            //printf("In this line there isn't any number\n");
-                        }
-                    } else if (symbol == "odp" && odpowiedz == "") {
-                        sendStatistics(0,0,0,0);
-                        if (line.find(odpowiedz.c_str()) != string::npos) {
-                            printf("Znaleziona");           //TODO: tego nie printuje
-                            symbol = "Q";
-                            //correct = false;    //wysyłamy dopiero kolejna
-                            line = "statystyka\n";
-                        }
+                //printf("%s: %s\n", symbol1.c_str(), line.c_str());
+
+                if (symbol1 == "odp") {
+                    if (odpowiedz == "") {
+                    sleep(10);
+                    sendStatistics(0,0,0,0);     //only one sending statistics
                     }
 
+                    if (line.find(odpowiedz) != string::npos) {
+                        symbol = "Q";
+                        correct = false;
+                        }
+                    else {
+                        correct = false;    //jesli nie znalazło linii - nie ta odpowiedz
+                        symbol = symbol1;
+                    }
+                }
+                else if (symbol1 != symbol) {
+                    symbol = symbol1;
+                    correct = false;
+                    }
+
+                if (symbol == "Q" && symbol1 != "odp") {
+                    try {
+                        odpowiedz = "";
+                        number = stoi(&line[0]);
+                        questionNumber = number;
+                        }
+                    catch (...) {
+                         //printf("In this line there isn't any number\n");
+                    }
+                }
+
+                if (correct) {
                     string codeLine = codeMessage(line, symbol, number);
                     char mes[codeLine.size() + 1];
                     strcpy(mes, codeLine.c_str());
 
                     if (correct)
                         sendToAll(mes);
-
-                    sleep(5);
-
+                    //sleep(2);
                     if (line.find("Koniec") != string::npos)
                         break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
                         //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
@@ -204,37 +212,47 @@ string Server::chooseCode(string line, string old) {
 }
 
 void Server::chooseMax(int s1, int s2, int s3, int s4) {
-     if (s1 > s2)
+     int maxi = max(max(max(s1,s2),s3),s4);
+     //printf("%d\n", maxi);
+     /*if (s1 > s2)
         if (s1 > s3)
             if (s1 > s4) {
                 odpowiedz = ".a.";
                 }
-            else {
+            else if (s4 > s1) {
                 odpowiedz = ".d.";
             }
         else if (s3 > s4){
              odpowiedz = ".c.";
         }
-        else{
+        else if (s4 > s3) {
             odpowiedz = ".d.";
         }
      else if (s2 > s3)
         if (s2 > s4) {
             odpowiedz = ".b.";
         }
-        else {
+        else if (s4 > s2) {
             odpowiedz = ".d.";
         }
-     else if (s2 > s3){
-        odpowiedz = ".b.";
-     }
-     else {
+     else if (s3 > s4){
         odpowiedz = ".c.";
      }
+     else if (s4 > s3) {
+        odpowiedz = ".d.";
+     }*/
+     if (s1 == maxi)       //REMIS
+        odpowiedz = ".a.";
+     else if (s2 == maxi)
+        odpowiedz = ".b.";
+     else if (s3 == maxi)
+        odpowiedz = ".c.";
+     else
+        odpowiedz = ".d.";
 }
 
 void Server::sendStatistics(int s1, int s2, int s3, int s4) {
-
+    //printf("Statystyki poczatek %d, %d, %d, %d\n", s1, s2, s3, s4);
     for (int i = 0; i < clientsVector.size(); i++ ) {
         if (clientsVector[i]->numerPytania == questionNumber)
             switch (clientsVector[i]->odpowiedz) {
@@ -251,11 +269,16 @@ void Server::sendStatistics(int s1, int s2, int s3, int s4) {
                 s4 ++;
                 break;
             }
+        //printf("%d, %d\n", clientsVector[i]->numerPytania, questionNumber);
     }
 
-    //printf("%d, %d, %d, %d\n", s1, s2, s3, s4);
     string message = "&&" + to_string(questionNumber) + "&&s1&&" + to_string(s1) + "&&" + to_string(questionNumber) + "&&s2&&" + to_string(s2) + "&&" + to_string(questionNumber) + "&&s3&&" + to_string(s3) + "&&" + to_string(questionNumber) + "&&s4&&" + to_string(s4);
-    chooseMax(s1, s2, s3, s4);
+    //printf("Statystyki wynik %d, %d, %d, %d\n", s1, s2, s3, s4);
+    if (s1 != 0 || s2 != 0 || s3 != 0 || s4 != 0) {
+        chooseMax(s1, s2, s3, s4);
+        //printf("Wchodzę\n");
+    }
+    else odpowiedz = "####";
 
     char mes[message.size() + 1];
     strcpy(mes, message.c_str());
