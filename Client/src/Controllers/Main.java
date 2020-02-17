@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main extends Application {
 
@@ -152,12 +153,20 @@ public class Main extends Application {
         Main.setButton3("");
         Main.setButton4("");
 
-        //coś na zasadzie dopóki nie dołączy do gry to nie idź dalej!!!
-        //while (!getGra()) {
-            System.out.println("Czekam na start gry!");     //TODO: Dane z args
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Please, write a host: ");
+            Main.host = scanner.nextLine();
+            System.out.println("Please, write a port: ");
+            Main.port = Integer.parseInt(scanner.nextLine());
+        } catch (Exception e) {
+            System.out.println("You write wrong data");
             Main.host = "localhost";        //args[0];
-            Main.port = 1234;                    //Integer.parseInt(args[1]);
-            launch(args);
-        //}
+            Main.port = 1235;                    //Integer.parseInt(args[1]);
+        }
+
+
+        System.out.println("I am waiting for start game!");     //TODO: Dane z args
+        launch(args);
     }
 }

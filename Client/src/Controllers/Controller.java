@@ -99,7 +99,7 @@ public class Controller {
 
     @FXML
     private void chooseFirst() throws IOException {
-        System.out.println("Zagłosowałam na opcje 1");
+        System.out.println("I vote on option 1");
 
         //TODO: dodac numer pytania
         SendTask sendTask = new SendTask("&&" + numerPytania + "&&1", out);
@@ -113,7 +113,7 @@ public class Controller {
 
     @FXML
     private void chooseSecond() throws IOException {
-        System.out.println("Zagłosowałam na opcje 2");
+        System.out.println("I vote on option 2");
 
         SendTask sendTask = new SendTask("&&" + numerPytania + "&&2", out);
         new Thread(sendTask).start();
@@ -126,7 +126,7 @@ public class Controller {
 
     @FXML
     private void chooseThird() throws IOException {
-        System.out.println("Zagłosowałam na opcje 3");
+        System.out.println("I vote on option 3");
 
         SendTask sendTask = new SendTask("&&" + numerPytania + "&&3", out);
         new Thread(sendTask).start();
@@ -139,10 +139,10 @@ public class Controller {
 
     @FXML
     private void chooseFourth() throws IOException {
-        System.out.println("Zagłosowałam na opcje 4");
-
         SendTask sendTask = new SendTask("&&" + numerPytania + "&&4", out);
         new Thread(sendTask).start();
+
+        System.out.println("I vote on option 4");
 
         firstButton.setDisable(true);
         secondButton.setDisable(true);
@@ -208,8 +208,8 @@ public class Controller {
                     break;
             }
         }catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("To nie było pytanie, odpowiedź, wynik głosowania ani statystyki");
+            System.out.println("Error with text messsages\n");
+            System.out.println(responseParts[i+1]);
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();
@@ -245,9 +245,6 @@ public class Controller {
 
     @FXML
     private void exit () {
-        SendTask sendTask = new SendTask("&&" + numerPytania + "&&Koniec", out);
-        new Thread(sendTask).start();
-
         Main.getMainStage().close();
         try {
             in.close();
@@ -256,7 +253,7 @@ public class Controller {
             StartWindow.getIn().close();
             StartWindow.getOut().close();
         }catch (IOException e) {
-            System.out.println("Ther is a problem with close connection.");
+            System.out.println("There is a problem with close connection.");
         }
 
     }

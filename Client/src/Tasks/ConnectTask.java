@@ -22,27 +22,27 @@ public class ConnectTask extends Task<Void> {
         while (!Main.getGra()) {
             try {
                 st.setSocket(new Socket(Main.host, Main.port));         //TODO: zmienic przyjmowane dane na Main.host, Main.port
-                st.setIn(st.getSocket().getInputStream());
-                st.setOut(st.getSocket().getOutputStream());
+                st.setIn(StartWindow.getSocket().getInputStream());
+                st.setOut(StartWindow.getSocket().getOutputStream());
 
-                ReadTask message = new ReadTask(st.getIn());
+                ReadTask message = new ReadTask(StartWindow.getIn());
                 new Thread(message).start();        //watek odczytywania zostal uruchomiony
 
                 message.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(WorkerStateEvent t) {
                         String response = message.getValue();
-                        System.out.println("response" + response);
+                        //System.out.println("response" + response);
                         while (response != null) {
                             String [] messageValue = response.split("&&");  //TODO: jaki mamy znak oddzielajacy?
 
                             switch (messageValue[1]) {
                                 case "0":
                                     //TODO:Serwer sie uruchomil co dalej?
-                                    System.out.println("Przyszła wiadomosc o grze!");
+                                    System.out.println("Start game");
                                     break;
                                 default:
-                                    System.out.println("Możliwe, że dostałem pytania, odpowiedzi lub dalsza czesc");
+                                    //System.out.println("Możliwe, że dostałem pytania, odpowiedzi lub dalsza czesc");
                                     //TODO: czy moze tak zostac, ze jest default'owe założenie, że przyszło pytanie?
                                     try {
                                         switch (messageValue[2]) {
@@ -75,12 +75,9 @@ public class ConnectTask extends Task<Void> {
                                                 break;
                                         }
                                     }catch (Exception e) {
-                                        System.out.println("To nie było pytanie");
+                                        System.out.println("It isn't a question\n");
                                     }
                                     break;
-                                /*default:
-                                    System.out.println("Nieznana wiadomosc");
-                                    break;*/
                             }
 
                         response = response.substring(5, response.length());

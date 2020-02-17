@@ -3,11 +3,11 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 #include <fstream>
 #include <vector>
 #include <ctime>
 #include <thread>
-#include <boost/lexical_cast.hpp>       //string -> int
 
 #include "Client.h"
 #include "Server.h"
@@ -15,6 +15,9 @@
 using namespace std;
 
 Server::Server(long port) {
+
+    questionNumber = 0;
+    odpowiedz = "";
 	
 	// ======CLEAR=VECTOR======
 	clientsVector.clear();
@@ -41,11 +44,10 @@ Server::Server(long port) {
     }
 	
 	// ======LISTEN======
-	res = listen(fd, SOMAXCONN); 		//TODO: było server->fd
+	res = listen(fd, SOMAXCONN);
     if(res){
         perror("listen failed");
-        //return 1;
-	exit(0);		//TODO: czy tak moze zostac
+	    exit(0);
     }
 }
 
@@ -61,50 +63,55 @@ void Server::handleEvent(uint32_t events) {
 		int clientFd = accept(fd, nullptr, nullptr);
 		printf("Accepted new connection: %d\n", clientFd);
 		
-		// lock Mutex
+		mutex_vector.lock();
 		
 		// Dodawanie nowego uczestnika
-		Client *clientt = new Client(clientFd);
-		clientsVector.push_back(clientFd);
+		Client *clientt = new Client(clientFd, this->getEpoll());
+		clientsVector.push_back(clientt);
 		
 		printf("Player in game!\n");
 
 		// Jeżeli są wystarczające wymogi do wystartowania gry -> startuje
 		if (clientsVector.size() > 0 && gameStart == 0) {
-			//mutex unlock;
 			// ======NEW=GAME======
+			mutex_vector.unlock();
 			gameStart = 1;
 			printf("======STARTING=NEW=GAME======\n");
 			std::thread game (&Server::runGame, this);	//TODO: czy to poprawne?
 			game.detach();
+		}
+		else {
+			mutex_vector.unlock();
 		};
-		// else {
-		//	mutex unlock
-		//};
 		 
 		 
 	}
 }
 
 void Server::deleteClient(int clientFd) {
-	clientsVector.erase(std::remove(clientsVector.begin(), clientsVector.end(), clientFd), clientsVector.end());
+    mutex_vector.lock();
+    for (int i = 0; i < clientsVector.size(); i++) {
+        if (clientsVector[i]-> fd == clientFd) {
+            Client *client1 = clientsVector[i];
+            clientsVector.erase(clientsVector.begin() + i);
+            delete client1;
+            break;
+        }
+    }
+    mutex_vector.unlock();
 }
 
 void Server::sendToAll(char *line) {
-	// mutex lock
-	for (int it : clientsVector) {
-	    try {
-        	int count = write(it, line, strlen(line));
+	mutex_vector.lock();
+	for (auto &it : clientsVector) {
+	    //try {
+        	int count = write(it->fd, line, strlen(line));
         	//printf("message sent %s\n", line);
 
         	if(count != (int) strlen(line))
         		perror("write failed");
-        } catch (...) {     //TODO: jaki to blad?
-        	printf("Error occured, disconnecting Client %d\n", it);
-        	deleteClient(it);
-        }
 	}
-
+	mutex_vector.unlock();
 }
 
 
@@ -114,66 +121,54 @@ void Server::runGame() {
 	ifs.open("script.txt", ios::in);
 	string line;
 	
-	if (clientsVector.size() > 0) {	//TODO: czy tu nie ma byc petli po wszystkich wartosciach vectora? na razie dodaje tylko wysyłanie do 0 elementu - było clientFd
+	if (clientsVector.size() > 0) {
 
-		int count = write(clientsVector[0], "&&1&&A&&A to zmieniony tekst\n", strlen("&&1&&Q&&A to zmieniony tekst\n"));
-		if(count != (int) strlen("&&1&&Q&&A to zmieniony tekst\n"))
-			perror("write failed");
-		sleep(1);
+        int number = 1; string symbol = "Q";
+        while (clientsVector.size() > 0 && getline(ifs, line)) {
 
-        //wysłanie statystyk 		//TODO: ogarnac to!!!
-		count = write(clientsVector[0], "&&1&&s4&&Stat4\n&&1&&s3&&Stat3\n&&1&&s2&&Stat2\n&&1&&s1&&Stat1\n", strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s2&&Stat2\n&&1&&s1&&Stat1\n"));
-		if(count != (int) strlen("&&1&&Qs&&Stat2\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n&&1&&s3&&Stat3\n"))
-			perror("write failed");
-		sleep(1);
+            if (line != "") {           //empty line is useless for us
+                bool correct = true;
 
-        count = write(clientsVector[0], "&&1&&s3&&Stat3\n", strlen("&&1&&Qs&&Stat2\n"));
-		if(count != (int) strlen("&&1&&sQ&&Stat2\n"))
-			perror("write failed");
-		sleep(1);
-
-        count = write(clientsVector[0], "&&1&&s2&&Stat2\n", strlen("&&1&&sQ&&Stat2\n"));
-		if(count != (int) strlen("&&1&&Qs&&Stat2\n"))
-			perror("write failed");
-		sleep(1);
-
-        count = write(clientsVector[0], "&&1&&s1&&Stat1\n", strlen("&&1&&Q1&&Stat2\n"));
-		if(count != (int) strlen("&&1&&1Q&&Stat1\n"))
-			perror("write failed");
-	}
-
-    int number = 1; string symbol = "Q";
-	while (clientsVector.size() > 0 && getline(ifs, line)) {	//TODO: wydobyc numer pytania i wysylac statystyki
-
-        if (line != "") {           //empty line is useless for us
-            bool correct = true;
-
-            symbol = chooseCode(line, symbol);
-
-            if (symbol == "Q") {
-                try {
-                number = stoi(&line[0]);
-                //printf("%i\n", number);
-                } catch (...) {
-                    //printf("In this line there isn't any number\n");
+                string symbol1 = chooseCode(line, symbol);
+                if (symbol1 != symbol) {
+                    correct = false;
+                    symbol = symbol1;
+                } else {
+                    symbol = symbol1;
                 }
-            } else if (symbol == "odp") {
-                //TODO: dodac warunek  && line.find(poprawne_glosowanie)
-                symbol = "Q";
+                if (correct) {
+                    if (symbol == "Q") {
+                        try {
+                            odpowiedz = "";         //zeby do momentu nie wyslania odpowiedzi bylo puste
+                            number = stoi(&line[0]);
+                            questionNumber = number;
+                        } catch (...) {
+                            //printf("In this line there isn't any number\n");
+                        }
+                    } else if (symbol == "odp" && odpowiedz == "") {
+                        sendStatistics(0,0,0,0);
+                        if (line.find(odpowiedz.c_str()) != string::npos) {
+                            printf("Znaleziona");           //TODO: tego nie printuje
+                            symbol = "Q";
+                            //correct = false;    //wysyłamy dopiero kolejna
+                            line = "statystyka\n";
+                        }
+                    }
+
+                    string codeLine = codeMessage(line, symbol, number);
+                    char mes[codeLine.size() + 1];
+                    strcpy(mes, codeLine.c_str());
+
+                    if (correct)
+                        sendToAll(mes);
+
+                    sleep(5);
+
+                    if (line.find("Koniec") != string::npos)
+                        break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
+                        //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
+                }
             }
-
-            string codeLine = codeMessage(line, symbol, number);
-            char mes[codeLine.size() + 1];
-            strcpy(mes, codeLine.c_str());
-
-            //if (correct)      //TODO: jak sprawdzic czy to jest linia z numerem czy tekstem
-            sendToAll(mes);
-
-            sleep(1);
-
-            if (line.find("Koniec") != string::npos)
-                break;		//zeby nie wysylało pustych lini tylko zakoczyło gre
-                //TODO: wrocic do urochomienia gry i czekac na graczy - po skończeniu serwer mial byc gotowy do kolejnej gry
         }
 	}
 	gameStart = 0;
@@ -188,7 +183,6 @@ string Server::codeMessage(string line, string symbol, int number) {
 
 string Server::chooseCode(string line, string old) {
     if (line.find(".a.") != string::npos || line.find(".b.") != string::npos || line.find(".c.") != string::npos || line.find(".d.") != string::npos)
-        //TODO: wysylamy tylko jedną odpowiedź - sprawdzic czy to dobre
         return "odp";
 
     if (line.find(".Q.") != string::npos || line.find("Koniec") != string::npos)   //tutaj wysylamy - numer pytania sie przyda!!!
@@ -209,15 +203,65 @@ string Server::chooseCode(string line, string old) {
     return old;     //last symbol is good now
 }
 
+void Server::chooseMax(int s1, int s2, int s3, int s4) {
+     if (s1 > s2)
+        if (s1 > s3)
+            if (s1 > s4) {
+                odpowiedz = ".a.";
+                }
+            else {
+                odpowiedz = ".d.";
+            }
+        else if (s3 > s4){
+             odpowiedz = ".c.";
+        }
+        else{
+            odpowiedz = ".d.";
+        }
+     else if (s2 > s3)
+        if (s2 > s4) {
+            odpowiedz = ".b.";
+        }
+        else {
+            odpowiedz = ".d.";
+        }
+     else if (s2 > s3){
+        odpowiedz = ".b.";
+     }
+     else {
+        odpowiedz = ".c.";
+     }
+}
+
 void Server::sendStatistics(int s1, int s2, int s3, int s4) {
-	/*
-	&&1&&stat1&&10&&1&&stat2&&20
 
-	pyt.1 = 10%
-	pyt.2 = 20%
-	*/
+    for (int i = 0; i < clientsVector.size(); i++ ) {
+        if (clientsVector[i]->numerPytania == questionNumber)
+            switch (clientsVector[i]->odpowiedz) {
+            case 1:
+                s1 ++;
+                break;
+            case 2:
+                s2 ++;
+                break;
+            case 3:
+                s3 ++;
+                break;
+            case 4:
+                s4 ++;
+                break;
+            }
+    }
+
+    //printf("%d, %d, %d, %d\n", s1, s2, s3, s4);
+    string message = "&&" + to_string(questionNumber) + "&&s1&&" + to_string(s1) + "&&" + to_string(questionNumber) + "&&s2&&" + to_string(s2) + "&&" + to_string(questionNumber) + "&&s3&&" + to_string(s3) + "&&" + to_string(questionNumber) + "&&s4&&" + to_string(s4);
+    chooseMax(s1, s2, s3, s4);
+
+    char mes[message.size() + 1];
+    strcpy(mes, message.c_str());
+
+    sendToAll(mes);
 };
-
 
 
 

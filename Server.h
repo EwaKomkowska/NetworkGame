@@ -4,13 +4,21 @@
 #include <arpa/inet.h>
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include "Handler.h"
+#include "Client.h"
 
 class Server : public Handler {
+private:
+    std::mutex mutex_vector;
+    std::mutex mutex_statistics;
+	std::string odpowiedz;
+
 public:
-	std::vector<int> clientsVector;
+	std::vector<Client*> clientsVector;
 	int gameStart;
+	int questionNumber;
 	
 	Server(long port);
 	~Server();
@@ -27,6 +35,10 @@ public:
 
 	std::string chooseCode(std::string line, std::string old);
 
+    void add(int pytanie, int odp, int ile);
+
     void sendStatistics(int s1, int s2, int s3, int s4);
+
+    void chooseMax(int s1, int s2, int s3, int s4);
 };
 #endif

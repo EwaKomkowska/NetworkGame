@@ -8,16 +8,16 @@
 
 using namespace std;
 
-Client::Client(int clientFd) {
-	fd = clientFd;		//TODO: brak deklaracji, ze to int?
+Client::Client(int clientFd, int epoll) {
+	fd = clientFd;
 	epoll_event event{EPOLLIN | EPOLLRDHUP, {.ptr=this}};
-	epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event);
+	epoll_ctl(epoll, EPOLL_CTL_ADD, fd, &event);
 }
 
 Client::~Client() {
 	// delete from vector
-	//Server::deleteClient(this->fd);		//TODO: cos nie dziala - nie trzeba przechowywac serwera?
-	epoll_ctl(epollFd, EPOLL_CTL_DEL, fd, nullptr);
+	//epoll_ctl(getEpoll(), EPOLL_CTL_DEL, fd, nullptr);
+	//Server::deleteClient(fd);
 	shutdown(fd, SHUT_RDWR);
 	close(fd);
 }
@@ -25,20 +25,24 @@ Client::~Client() {
 void Client::handleEvent(uint32_t events) {
 	if (events & EPOLLIN) {
 		// otrzymano wiadomość od klienta
-		
-		char buffer[50];
+		char buffer[100];
+
+		read_mutex.lock();
 		int count = read(fd, buffer, sizeof(buffer));
-		// mutex lock
+
 		
 		//! AND GAME STARTED
 		if (count > 0) {
 			//! Tutaj będzie potrzebna obsługa odpowiedzi
 			//&&x&&4;
 			std::string message = std::string(buffer);
-			printf("Otrzymano wiadomość %s", message.c_str());
+			printf("Otrzymano wiadomość %d: %s\n", count, message.c_str());
+
+			numerPytania = stoi(&message[2]);
+			odpowiedz = stoi(&message[5]);
 		}
 		
-		// mutex unlock
+		read_mutex.unlock();
 	};
 }
 

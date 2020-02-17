@@ -1,13 +1,20 @@
 #ifndef client
 #define client
 #include <string>
+#include <mutex>
+
 #include "Handler.h"
 
 class Client : public Handler {
+private:
+    std::mutex read_mutex;
+
 public:
 	int fd;		//TODO: nie bylo - moze zostac?
+	int numerPytania;
+	int odpowiedz;
 
-	Client(int clientFd);
+	Client(int clientFd, int epoll);
 	~Client();
 	
 	void handleEvent(uint32_t events) override;

@@ -40,14 +40,14 @@ int main(int argc, char ** argv) {
 	
 	// =======EPOLL=EVENTS=CATCH========
 	
-	server1->epollFd = epoll_create1(0);
+	server1->setEpoll(epoll_create1(0));
 	epoll_event event{EPOLLIN, {.ptr=server1}};
-	epoll_ctl(server1->epollFd, EPOLL_CTL_ADD, server1->fd, &event);
+	epoll_ctl(server1->getEpoll(), EPOLL_CTL_ADD, server1->fd, &event);
 	
 	// =========HANDLE=EVENTS===========
 	
 	while(1) {
-		if (-1 == epoll_wait(server1->epollFd, &event, 1, -1)) {
+		if (-1 == epoll_wait(server1->getEpoll(), &event, 1, -1)) {
 			perror("epoll_wait failed");
 			close(server1->fd);
 			delete server1;
@@ -55,11 +55,11 @@ int main(int argc, char ** argv) {
 		}
 		((Handler *)event.data.ptr) -> handleEvent(event.events);
 	}
-	
+
 	// ======CLOSE======
 	try {
 	    close(server1->fd);
-	    close(server1->epollFd);
+	    close(server1->getEpoll());
 	} catch (...) {
 	    printf("Failed to close sockets\n");
 	}

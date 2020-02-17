@@ -1,6 +1,7 @@
 package Controllers;
 
 import Tasks.ConnectTask;
+import Tasks.ReadTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -61,6 +62,10 @@ public class StartWindow {
 
         ConnectTask ct = new ConnectTask(this);
         new Thread(ct).start();
+
+
+        //Controller c = new Controller();
+        //c.listenResponses();
     }
 
     @FXML
