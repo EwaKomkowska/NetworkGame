@@ -296,7 +296,7 @@ void Server::chooseMax(int s1, int s2, int s3, int s4) {
 void Server::sendStatistics(int s1, int s2, int s3, int s4) {
     //printf("Statystyki poczatek %d, %d, %d, %d\n", s1, s2, s3, s4);
     for (int i = 0; i < (int) clientsVector.size(); i++ ) {
-        if (clientsVector[i]->numerPytania == questionNumber)
+        if (clientsVector[i]->numerPytania == questionNumber) {
             switch (clientsVector[i]->odpowiedz) {
             case 1:
                 s1 ++;
@@ -311,6 +311,10 @@ void Server::sendStatistics(int s1, int s2, int s3, int s4) {
                 s4 ++;
                 break;
             }
+        } else {            //żeby nie zapamiętało odpowiedzi na pytanie na kolejna ture
+            clientsVector[i]->numerPytania = 0;
+            clientsVector[i]->odpowiedz = 0;
+        }
         //printf("%d, %d\n", clientsVector[i]->numerPytania, questionNumber);
     }
 

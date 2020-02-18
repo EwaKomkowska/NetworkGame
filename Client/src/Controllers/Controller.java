@@ -208,7 +208,7 @@ public class Controller {
                     break;
             }
         }catch (Exception e) {
-            System.out.println("Error with text messsages" + responseParts[i-1] + responseParts[i]);
+            //System.out.println("Error with text messsages" + responseParts[i-1] + responseParts[i]);
         }
         // po otrzymaniu wiadomości kontynuujemy nasłuchiwanie odpowiedzi od serwera
         listenResponses();
