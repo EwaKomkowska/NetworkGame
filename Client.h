@@ -10,7 +10,7 @@ private:
     std::mutex read_mutex;
 
 public:
-	int fd;		//TODO: nie bylo - moze zostac?
+	int fd;
 	int numerPytania;
 	int odpowiedz;
 
@@ -18,7 +18,5 @@ public:
 	~Client() override;
 	
 	void handleEvent(uint32_t events) override;
-	
-	void sendMessage(std::string message);
 };
 #endif
