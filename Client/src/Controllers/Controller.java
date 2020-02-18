@@ -156,8 +156,6 @@ public class Controller {
             switch (responseParts[i+1]) {
                 case "Q":       //pytanie //odpowiedz
                     Main.setText(responseParts[i+2]);
-                    data.addAll(responseParts[i+2]);
-                    list.setItems(data);
                     numerPytania = Integer.parseInt(responseParts[i]);
                     if (responseParts[i+2].equals("Koniec")) {
                         firstButton.setVisible(false);
@@ -166,13 +164,15 @@ public class Controller {
                         fourthButton.setVisible(false);
                         Thread.sleep(10000);
                         Main.setGra(false);
-                        exit();
+                        //exit();
                     } else {        //if question/answer - we can't vote
                         firstButton.setDisable(true);
                         secondButton.setDisable(true);
                         thirdButton.setDisable(true);
                         fourthButton.setDisable(true);
                     }
+                    data.addAll(responseParts[i+2]);
+                    list.setItems(data);
                     break;
                 case "A":
                     Main.setButton1(responseParts[i+2]);

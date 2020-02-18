@@ -62,8 +62,6 @@ public class StartWindow {
 
         ConnectTask ct = new ConnectTask(this);
         new Thread(ct).start();
-
-
         //Controller c = new Controller();
         //c.listenResponses();
     }

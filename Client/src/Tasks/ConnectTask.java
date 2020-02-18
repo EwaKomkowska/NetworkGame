@@ -47,7 +47,7 @@ public class ConnectTask extends Task<Void> {
                                     try {
                                         switch (messageValue[2]) {
                                             case "Q":       //pytanie lub odpowiedź
-                                                Main.setText(Main.getText() + messageValue[3]);
+                                                Main.setText(Main.getText() + messageValue[3] + "\n");
                                                 break;
                                             case "A":
                                                 Main.setButton1(messageValue[3]);
