@@ -18,9 +18,7 @@ Client::Client(int clientFd, int epoll) {
 }
 
 Client::~Client() {
-	// delete from vector
 	epoll_ctl(getEpoll(), EPOLL_CTL_DEL, fd, nullptr);
-	//Server::deleteClient(fd);
 	try {
 	    shutdown(fd, SHUT_RDWR);
 	    close(fd);
@@ -38,7 +36,7 @@ void Client::handleEvent(uint32_t events) {
 		
 		//! AND GAME STARTED
 		if (count > 0) {
-			//! Tutaj będzie potrzebna obsługa odpowiedzi
+			//! Obsługa odpowiedzi
 			//&&x&&4;
 			std::string message = std::string(buffer);
 			printf("Otrzymano wiadomość %d: %s\n", count, message.c_str());
@@ -60,7 +58,3 @@ void Client::handleEvent(uint32_t events) {
 		read_mutex.unlock();
 	};
 }
-
-void Client::sendMessage(std::string message) {
-	write(fd, &message, message.length());
-};
