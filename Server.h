@@ -22,8 +22,8 @@ public:
 	int gameStart;
 	int questionNumber;
 	
-	Server(long port);
-	~Server();
+	Server(long port, char* host);
+	~Server() override;
 	
 	void handleEvent(uint32_t events) override;
 	

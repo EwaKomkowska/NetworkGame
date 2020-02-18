@@ -15,7 +15,7 @@ public:
 	int odpowiedz;
 
 	Client(int clientFd, int epoll);
-	~Client();
+	~Client() override;
 	
 	void handleEvent(uint32_t events) override;
 	

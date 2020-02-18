@@ -13,6 +13,7 @@ public:
     sockaddr_in myAddr;
 
     virtual void handleEvent (uint32_t events) = 0;
+    virtual ~Handler() {};
 
     int getEpoll() {
         return epollFd;

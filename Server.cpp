@@ -18,7 +18,7 @@ using namespace std;
 extern std::string firstAnswer;
 extern std::mutex mutex_firstAnswer;
 
-Server::Server(long port) {
+Server::Server(long port, char* host) {
 
     questionNumber = 0;
     odpowiedz = "";
@@ -30,12 +30,12 @@ Server::Server(long port) {
 	// ======CLEAR=VECTOR======
 	clientsVector.clear();
 	gameStart = 0;
-	
-	
+
+
 	// ======CREATE=SOCKET======
 	myAddr = {};
 		myAddr.sin_family = AF_INET;
-		myAddr.sin_addr.s_addr = htons(INADDR_ANY);	//TODO: czy tu nie powinno być inet_addr?
+		myAddr.sin_addr = {inet_addr(host)};	//TODO: czy tu nie powinno być inet_addr?
 		myAddr.sin_port = htons((uint16_t)port);
 		
 	fd = socket(PF_INET, SOCK_STREAM, 0);
@@ -98,14 +98,16 @@ void Server::handleEvent(uint32_t events) {
 
 void Server::deleteClient(int clientFd) {
     mutex_vector.lock();
-    for (int i = 0; i < clientsVector.size(); i++) {
+    int i;
+    for (i = 0; i < (int) clientsVector.size(); i++) {
         if (clientsVector[i]-> fd == clientFd) {
-            Client *client1 = clientsVector[i];
-            clientsVector.erase(clientsVector.begin() + i);
-            delete client1;
             break;
         }
     }
+    Client *client1 = clientsVector[i];
+    delete client1;
+    clientsVector.erase(clientsVector.begin() + i);
+
     mutex_vector.unlock();
 }
 
@@ -144,7 +146,7 @@ void Server::sendToAll(char *line) {
               }
       	}*/
 	mutex_vector.unlock();
-	for (int i = 0; i < invalidClients.size(); i++)
+	for (int i = 0; i < (int) invalidClients.size(); i++)
         deleteClient(invalidClients[i]);
     invalidClients.clear();
 }
@@ -225,7 +227,7 @@ void Server::runGame() {
 	    it++;
 	}
 	clientsVector.clear();
-	printf("po while'u %d\n", clientsVector.size());
+	printf("End Game\n");
 	mutex_vector.unlock();
 
 	gameStart = 0;
@@ -263,7 +265,7 @@ string Server::chooseCode(string line, string old) {
 void Server::chooseMax(int s1, int s2, int s3, int s4) {
      int maxi = max(max(max(s1,s2),s3),s4);
      //printf("%d\n", maxi);
-     if ((s1 == maxi && s1 == s2) || (s1 == maxi && s1 == s3) || (s1 == maxi && s1 == s4) || (s3 == maxi && s2 == s2) || (s4 == maxi && s4 == s2) || (s3 == maxi && s3 == s4)) {        //REMIS
+     if ((s1 == maxi && s1 == s2) || (s1 == maxi && s1 == s3) || (s1 == maxi && s1 == s4) || (s3 == maxi && s3 == s2) || (s4 == maxi && s4 == s2) || (s3 == maxi && s3 == s4)) {        //REMIS
         mutex_firstAnswer.lock();
         switch (stoi(firstAnswer)) {
             case 1:
@@ -293,7 +295,7 @@ void Server::chooseMax(int s1, int s2, int s3, int s4) {
 
 void Server::sendStatistics(int s1, int s2, int s3, int s4) {
     //printf("Statystyki poczatek %d, %d, %d, %d\n", s1, s2, s3, s4);
-    for (int i = 0; i < clientsVector.size(); i++ ) {
+    for (int i = 0; i < (int) clientsVector.size(); i++ ) {
         if (clientsVector[i]->numerPytania == questionNumber)
             switch (clientsVector[i]->odpowiedz) {
             case 1:

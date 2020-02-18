@@ -23,18 +23,23 @@ Server * server1;
 using namespace std;
 
 int main(int argc, char ** argv) {
-    if(argc!=2){
-        printf("Usage: %s <port>\n", argv[0]);
+    if(argc!=3){
+        printf("Usage: %s <port> <host>\n", argv[0]);
         return 1;
     }
     char * endp;
     long port = strtol(argv[1], &endp, 10);
     if(*endp || port > 65535 || port < 1) {
-        printf("Usage: %s <port>\n", argv[0]);
+        printf("Usage: %s <port>  <host>\n", argv[0]);
+        return 1;
+    }
+
+    if (string(argv[2]) == "") {
+        printf("Usage: %s <port>  <host>\n", argv[0]);
         return 1;
     }
     
-	server1 = new Server(port);
+	server1 = new Server(port, argv[2]);
 	signal(SIGPIPE, SIG_IGN);
 	
 	// =======EPOLL=EVENTS=CATCH========
